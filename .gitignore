@@ -4,6 +4,7 @@ coverage/
 .vscode/
 .env
 .coveralls.yml
+config.ts
 
 .DS_Store
 **/.DS_Store

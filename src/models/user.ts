@@ -5,9 +5,10 @@ const User = new mongoose.Schema(
 		name: { type: String, required: true },
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
-		quote: { type: String },
 	},
-	{ collection: 'user-data' }
+	{ collection: 'user-data',
+	  strict: false
+    }
 )
 
 const model = mongoose.model('UserData', User)

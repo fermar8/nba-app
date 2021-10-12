@@ -4,9 +4,10 @@ import morgan from 'morgan';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser'
 
 
-import { authRouter } from './src/routes/api/auth/index';
+import { authRouter } from './src/api/routes/auth';
 
 try {
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nba-app', {
@@ -20,10 +21,12 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nba-app',
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(cookieParser());
+
 
 app.use('/api/auth', authRouter);
 
