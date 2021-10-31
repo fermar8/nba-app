@@ -1,13 +1,12 @@
-export interface UserType {
-    name: string;
-	email: string;
-}
-
-export interface UserTypeExtended {
-    name: string;
+export interface UserBasic {
+	name: string;
 	email: string;
 	password: string;
-    token: string;
-	createdAt: number;
 }
 
+export interface UserComplete extends UserBasic {
+	createdAt: Date;
+}
+
+
+export type UserData = UserBasic | UserComplete;
