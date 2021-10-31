@@ -1,5 +1,5 @@
-import { UserData } from '../../api/routes/auth/types';
-import User from '../../models/user';
+import { UserData } from '../../../api/routes/auth/types';
+import User from '../../../models/user';
 import jwt from 'jsonwebtoken';
 
 class TokenController {

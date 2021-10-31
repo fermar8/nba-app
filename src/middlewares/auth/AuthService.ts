@@ -2,8 +2,8 @@ import { UserData } from '../../api/routes/auth/types';
 import { Request, Response } from 'express';
 
 import ResponsesService from '../responses/ResponsesService';
-import tokenController from './TokenController';
-import userController from './UserController';
+import tokenController from './Controllers/TokenController';
+import userController from './Controllers/UserController';
 
 class AuthService {
    UserController: typeof userController;

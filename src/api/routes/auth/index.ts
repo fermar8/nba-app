@@ -56,4 +56,4 @@ authRouter.put('/logout', async (req: Request, res: Response) => {
 	} catch (err) {
 		await ResponsesService.sendUnexpectedErrorResponse('Unexpected error when logging out', err, res);
 	}
-})
+});

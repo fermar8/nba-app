@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import User from '../../models/user';
-import { UserData } from '../../api/routes/auth/types';
+import User from '../../../models/user';
+import { UserData } from '../../../api/routes/auth/types';
 
 
 class UserController {
