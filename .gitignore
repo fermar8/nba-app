@@ -8,3 +8,4 @@ config.ts
 
 .DS_Store
 **/.DS_Store
+sendgrid.env

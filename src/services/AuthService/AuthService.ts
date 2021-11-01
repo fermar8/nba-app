@@ -1,16 +1,16 @@
 import { UserData } from '../../api/routes/auth/types';
 import { Request, Response } from 'express';
 
-import ResponsesService from '../responses/ResponsesService';
-import tokenController from './Controllers/TokenController';
-import userController from './Controllers/UserController';
+import ResponsesService from '../ResponsesService/';
+import { tokenController, userController } from './Controllers';
+
 
 class AuthService {
    UserController: typeof userController;
    TokenController: typeof tokenController;
    constructor(UserController: typeof userController, TokenController: typeof tokenController) {
       this.UserController = UserController,
-         this.TokenController = TokenController
+      this.TokenController = TokenController
    }
 
    createPassword = async (password: string) => {
