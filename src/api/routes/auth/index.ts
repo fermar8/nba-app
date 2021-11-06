@@ -1,8 +1,6 @@
 import { env } from '../../../../config';
-import { Router, Request, Response } from 'express'
-import AuthService from '../../../services/AuthService';
-import SendGridService from '../../../services/SendGridService';
-import ResponsesService from '../../../services/ResponsesService';
+import { Router, Request, Response } from 'express';
+import { AuthService, ResponsesService, SendGridService } from '../../services';
 import { UserData } from './types';
 
 export const authRouter = Router();
@@ -73,5 +71,14 @@ authRouter.post('/forgotpassword', async (req: Request, res: Response) => {
 		}
 	} catch (err: any) {
 		await ResponsesService.sendBadRequestResponse('Operation could not be fulfilled', err.message, res);
+	}
+})
+
+authRouter.post('/resetpassword', async (req: Request, res: Response) => {
+	try {
+		await AuthService.resetPassword(req.body.email, req.body.password);
+		await ResponsesService.sendOkPost('Password reset successful', res);
+	} catch (err: any) {
+		await ResponsesService.sendUnexpectedErrorResponse('Could not reset password', err.message, res);
 	}
 })

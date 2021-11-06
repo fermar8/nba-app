@@ -1,5 +1,5 @@
-import { UserData } from '../../../api/routes/auth/types';
-import User from '../../../models/user';
+import { UserData } from '../../../../api/routes/auth/types';
+import User from '../../../../models/user';
 import jwt from 'jsonwebtoken';
 
 class TokenController {
@@ -23,11 +23,11 @@ class TokenController {
    }
 
      updateTokenByEmail = async (email: string, token: string) => {
-        await User.findOneAndUpdate({ email: email }, { token: token });
+        await User.findOneAndUpdate({ email }, { token });
      }
 
      updateTokenByToken = async (token: string, refreshToken: string) => {
-        await User.findOneAndUpdate({ token: token }, { token: refreshToken });
+        await User.findOneAndUpdate({ token }, { token: refreshToken });
      }
 
      verifyToken = async (token: string, secret: string) => {
@@ -36,7 +36,7 @@ class TokenController {
      }
 
      deleteTokenFromDb = async (token: string) => {
-         await User.findOneAndUpdate({ token: token}, {$unset: {token}})
+         await User.findOneAndUpdate({ token }, {$unset: { token }})
      }
 
      

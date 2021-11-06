@@ -4,21 +4,21 @@ class ResponsesService {
     sendOkPost = async (message: string, res: Response) => {
         res.status(200).json({
             status: 'ok',
-            message: message
+            message
         })
     }
 
     sendOkNoContent = async (message: string, res: Response) => {
         res.status(204).json({
             status: 'ok',
-            message: message
+            message
         })
     }
 
     sendBadRequestResponse = async (message: string, error: string, res: Response) => {
         res.status(400).json({
             status: 'error',
-            message: message,
+            message,
             error: error ? error: 'bad request',
         })
     }
@@ -26,7 +26,7 @@ class ResponsesService {
     sendUnexpectedErrorResponse = async (message: string, error: unknown, res: Response) => {
         res.status(404).json({
             status: 'error',
-            message: message,
+            message,
             error: error ? error: 'unexpected error',
         })
     }

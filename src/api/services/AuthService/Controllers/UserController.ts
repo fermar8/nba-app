@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import User from '../../../models/user';
-import { UserData } from '../../../api/routes/auth/types';
+import User from '../../../../models/user';
+import { UserData } from '../../../../api/routes/auth/types';
 
 
 class UserController {
@@ -13,33 +13,32 @@ class UserController {
         await User.create({
             name: userData.name,
             email: userData.email,
-            password: password,
-            token: token,
+            password,
+            token,
             createdAt: Date.now()
         })
     }
 
     getUserData = async (name: string, email: string, password: string) => {
-        const userData: UserData = {
-            name: name,
-            email: email,
-            password: password
-        }
+        const userData: UserData = { name, email, password };
         return userData;
     }
 
     findUserByEmail = async (email: string) => {
-        const userData: UserData = await User.findOne({
-            email: email,
-        })
+        const userData: UserData = await User.findOne({ email });
         return userData;
     }
 
     findUserByToken = async (token: string) => {
-        const userData: UserData = await User.findOne({
-            token: token,
-        })
+        const userData: UserData = await User.findOne({ token })
         return userData;
+    }
+
+    updatePassword = async (email: string, newPassword: string) => {
+        const response = await User.findOneAndUpdate({ email }, { password: newPassword });
+        if (!response) {
+            throw new Error('Email not matching with DB');
+        }
     }
 
     validatePassword = async (receivedPassword: string, userPassword: string) => {

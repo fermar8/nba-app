@@ -1,4 +1,4 @@
-import { UserData } from '../../api/routes/auth/types';
+import { UserData } from '../../../api/routes/auth/types';
 import { Request, Response } from 'express';
 
 import ResponsesService from '../ResponsesService/';
@@ -32,6 +32,11 @@ class AuthService {
    findUserByToken = async (token: string) => {
       return this.UserController.findUserByToken(token);
    }
+
+   resetPassword = async (email: string, password: string) => {
+      const newPassword: string = await this.UserController.createPassword(password);
+      await this.UserController.updatePassword(email, newPassword);
+   };
 
    validatePassword = async (receivedPassword: string, userPassword: string) => {
       return this.UserController.validatePassword(receivedPassword, userPassword);
