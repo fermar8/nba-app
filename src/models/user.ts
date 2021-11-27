@@ -1,10 +1,13 @@
 import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 
 const User = new mongoose.Schema(
 	{
 		name: { type: String, required: true, unique: true },
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
+		teams: [{ type: Schema.Types.ObjectId, ref: "Team" }],
+		leagues: [{ type: Schema.Types.ObjectId, ref: "League" }],
 		createdAt: { type: Number },
 		token: { type: String }
 	},

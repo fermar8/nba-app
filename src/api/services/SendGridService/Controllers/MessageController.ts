@@ -6,7 +6,7 @@ class MessageController {
             from: senderEmail,
             subject: 'Reset password',
             text: 'Use the following link to reset your password',
-            html: '<a>http://localhost:3000/register</a>',
+            html: '<a>http://localhost:3000/resetpassword</a>',
         }
         return msg;
     }

@@ -18,6 +18,7 @@
       "allowSyntheticDefaultImports": true,
       "experimentalDecorators": true,
       "sourceMap": true,
+      "resolveJsonModule": true,
       "outDir": "./dist/tsc/",
       "types": [
         "node",
@@ -30,7 +31,7 @@
     },
     "include": [
       "src/**/*.ts"
-    ],
+, "src/utils/buildPlayers.js"    ],
     "exclude": [
       "node_modules",
       "**/*.test.ts"

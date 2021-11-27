@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Player from '../../models/player.js';
+import { PlayerType } from '../types';
 import AtlantaHawks from '../rosters/AtlantaHawks.json';
 import { env } from '../../../config.js';
 // import BostonCeltics from '../rosters/BostonCeltics.json';
@@ -41,9 +42,9 @@ mongoose.connect(env.MONGODB_URI as string || 'mongodb://localhost:27017/nba-app
     useFindAndModify: false
 });
 
-const createPlayersForTeam = async (team: Array<object>) => {
+const createPlayersForTeam = async (team: Array<PlayerType>) => {
     try {
-        console.log(AtlantaHawks)
+           await Player.deleteMany({ teamId: team[0].teamId });
            await Player.insertMany(team);
         console.log('Players for team created successfully');
         await mongoose.connection.close();

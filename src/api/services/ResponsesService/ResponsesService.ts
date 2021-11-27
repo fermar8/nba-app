@@ -8,6 +8,13 @@ class ResponsesService {
         })
     }
 
+    sendOkContent = async (message: any, res: Response) => {
+        res.status(201).json({
+            status: 'ok',
+            message
+        })
+    }
+
     sendOkNoContent = async (message: string, res: Response) => {
         res.status(204).json({
             status: 'ok',

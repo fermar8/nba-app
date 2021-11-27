@@ -1,0 +1,275 @@
+[
+  {
+    "firstName": "Delon",
+    "lastName": "Wright",
+    "teamId": "1",
+    "yearsPro": "6",
+    "collegeName": "Utah",
+    "country": "USA",
+    "playerId": "564",
+    "dateOfBirth": "1992-04-26",
+    "affiliation": "Utah/USA",
+    "startNba": "2015",
+    "heightInMeters": "1.96",
+    "weightInKilograms": "83.9",
+    "leagues": {
+      "standard": {
+        "jersey": "0",
+        "active": "1",
+        "pos": "G"
+      }
+    }
+  },
+  {
+    "firstName": "Jalen",
+    "lastName": "Johnson",
+    "teamId": "1",
+    "yearsPro": "0",
+    "collegeName": "Duke",
+    "country": "USA",
+    "playerId": "2819",
+    "dateOfBirth": "2001-12-18",
+    "affiliation": "Duke/USA",
+    "startNba": "2021",
+    "heightInMeters": "2.03",
+    "weightInKilograms": "99.3",
+    "leagues": {
+      "standard": {
+        "jersey": "1",
+        "active": "1",
+        "pos": "F"
+      }
+    }
+  },
+  {
+    "firstName": "Sharife",
+    "lastName": "Cooper",
+    "teamId": "1",
+    "yearsPro": "0",
+    "collegeName": "Auburn",
+    "country": "USA",
+    "playerId": "2800",
+    "dateOfBirth": "2001-06-11",
+    "affiliation": "Auburn/USA",
+    "startNba": "2021",
+    "heightInMeters": "1.85",
+    "weightInKilograms": "79.8",
+    "leagues": {
+      "standard": {
+        "jersey": "2",
+        "active": "1",
+        "pos": "G"
+      }
+    }
+  },
+  {
+    "firstName": "Kevin",
+    "lastName": "Huerter",
+    "teamId": "1",
+    "yearsPro": "3",
+    "collegeName": "Maryland",
+    "country": "USA",
+    "playerId": "980",
+    "dateOfBirth": "1998-08-27",
+    "affiliation": "Maryland/USA",
+    "startNba": "2018",
+    "heightInMeters": "2.01",
+    "weightInKilograms": "89.8",
+    "leagues": {
+      "standard": {
+        "jersey": "3",
+        "active": "1",
+        "pos": "G-F"
+      }
+    }
+  },
+  {
+    "firstName": "Skylar",
+    "lastName": "Mays",
+    "teamId": "1",
+    "yearsPro": "1",
+    "collegeName": "Louisiana State",
+    "country": "USA",
+    "playerId": "2620",
+    "dateOfBirth": "1997-09-05",
+    "affiliation": "Louisiana State/USA",
+    "startNba": "2020",
+    "heightInMeters": "1.93",
+    "weightInKilograms": "93.0",
+    "leagues": {
+      "standard": {
+        "jersey": "4",
+        "active": "1",
+        "pos": "G"
+      }
+    }
+  },
+  {
+    "firstName": "Lou",
+    "lastName": "Williams",
+    "teamId": "1",
+    "yearsPro": "16",
+    "collegeName": "South Gwinnett HS (GA)",
+    "country": "USA",
+    "playerId": "553",
+    "dateOfBirth": "1986-10-27",
+    "affiliation": "South Gwinnett HS (GA)/USA",
+    "startNba": "2005",
+    "heightInMeters": "1.88",
+    "weightInKilograms": "79.4",
+    "leagues": {
+      "standard": {
+        "jersey": "6",
+        "active": "1",
+        "pos": "G"
+      }
+    }
+  },
+  {
+    "firstName": "Timothe",
+    "lastName": "Luwawu-Cabarrot",
+    "teamId": "1",
+    "yearsPro": "5",
+    "collegeName": "Mega Basket",
+    "country": "France",
+    "playerId": "329",
+    "dateOfBirth": "1995-05-09",
+    "affiliation": "Mega Basket/France",
+    "startNba": "2016",
+    "heightInMeters": "2.01",
+    "weightInKilograms": "97.5",
+    "leagues": {
+      "standard": {
+        "jersey": "7",
+        "active": "1",
+        "pos": "G-F"
+      }
+    }
+  },
+  {
+    "firstName": "Danilo",
+    "lastName": "Gallinari",
+    "teamId": "1",
+    "yearsPro": "12",
+    "collegeName": "Olimpia Milano",
+    "country": "Italy",
+    "playerId": "181",
+    "dateOfBirth": "1988-08-08",
+    "affiliation": "Olimpia Milano/Italy",
+    "startNba": "2008",
+    "heightInMeters": "2.08",
+    "weightInKilograms": "107.0",
+    "leagues": {
+      "standard": {
+        "jersey": "8",
+        "active": "1",
+        "pos": "F"
+      }
+    }
+  },
+  {
+    "firstName": "Gorgui",
+    "lastName": "Dieng",
+    "teamId": "1",
+    "yearsPro": "8",
+    "collegeName": "Louisville",
+    "country": "Senegal",
+    "playerId": "141",
+    "dateOfBirth": "1990-01-18",
+    "affiliation": "Louisville/Senegal",
+    "startNba": "2013",
+    "heightInMeters": "2.08",
+    "weightInKilograms": "112.5",
+    "leagues": {
+      "standard": {
+        "jersey": "10",
+        "active": "1",
+        "pos": "C"
+      }
+    }
+  },
+  {
+    "firstName": "Trae",
+    "lastName": "Young",
+    "teamId": "1",
+    "yearsPro": "3",
+    "collegeName": "Oklahoma",
+    "country": "USA",
+    "playerId": "1046",
+    "dateOfBirth": "1998-09-19",
+    "affiliation": "Oklahoma/USA",
+    "startNba": "2018",
+    "heightInMeters": "1.85",
+    "weightInKilograms": "74.4",
+    "leagues": {
+      "standard": {
+        "jersey": "11",
+        "active": "1",
+        "pos": "G"
+      }
+    }
+  },
+  {
+    "firstName": "De'Andre",
+    "lastName": "Hunter",
+    "teamId": "1",
+    "yearsPro": "2",
+    "collegeName": "Virginia",
+    "country": "USA",
+    "playerId": "1868",
+    "dateOfBirth": "1997-12-02",
+    "affiliation": "Virginia/USA",
+    "startNba": "2019",
+    "heightInMeters": "2.03",
+    "weightInKilograms": "100.2",
+    "leagues": {
+      "standard": {
+        "jersey": "12",
+        "active": "1",
+        "pos": "F-G"
+      }
+    }
+  },
+  {
+    "firstName": "Bogdan",
+    "lastName": "Bogdanovic",
+    "teamId": "1",
+    "yearsPro": "4",
+    "collegeName": "Fenerbahce",
+    "country": "Serbia",
+    "playerId": "743",
+    "dateOfBirth": "1992-08-18",
+    "affiliation": "Fenerbahce/Serbia",
+    "startNba": "2017",
+    "heightInMeters": "1.98",
+    "weightInKilograms": "102.1",
+    "leagues": {
+      "standard": {
+        "jersey": "13",
+        "active": "1",
+        "pos": "G"
+      }
+    }
+  },
+  {
+    "firstName": "Clint",
+    "lastName": "Capela",
+    "teamId": "1",
+    "yearsPro": "7",
+    "collegeName": "Elan Chalon",
+    "country": "Switzerland",
+    "playerId": "92",
+    "dateOfBirth": "1994-05-18",
+    "affiliation": "Elan Chalon/Switzerland",
+    "startNba": "2014",
+    "heightInMeters": "2.08",
+    "weightInKilograms": "116.1",
+    "leagues": {
+      "standard": {
+        "jersey": "15",
+        "active": "1",
+        "pos": "C"
+      }
+    }
+  }
+]
