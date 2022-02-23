@@ -6,5 +6,6 @@ coverage/
 .coveralls.yml
 
 .DS_Store
+config.ts
 **/.DS_Store
 sendgrid.env

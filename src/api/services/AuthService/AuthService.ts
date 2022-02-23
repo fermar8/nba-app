@@ -46,10 +46,16 @@ class AuthService {
       return this.TokenController.signToken(userData, secret);
    }
 
-   sendCookie = async (token: string, res: Response) => {
+   sendCookieAndUser = async (token: string, res: Response) => {
       await ResponsesService.buildAndSendCookie(token, res);
-      await ResponsesService.sendOkPost('Cookie initialized', res)
+      const userData = await this.UserController.findUserByToken(token);
+      const reducedUserData = {
+         username: userData.name,
+         email: userData.email
+      }
+      await ResponsesService.sendOkPost('Cookie initialized', res, reducedUserData);
    }
+   
 
    refreshCookie = async (token: string, res: Response) => {
       await ResponsesService.buildAndSendCookie(token, res);
@@ -58,7 +64,7 @@ class AuthService {
 
    updateTokenByEmail = async (email: string, token: string, res: Response) => {
       this.TokenController.updateTokenByEmail(email, token);
-      this.sendCookie(token, res);
+      this.sendCookieAndUser(token, res);
    }
 
    updateTokenByToken = async (token: string, refreshToken: string, res: Response) => {

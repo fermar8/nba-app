@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 
 
 import { authRouter } from './src/api/routes/auth';
-import { rapidApi } from './src/api/routes/rapidApi';
+import { nbaSite } from './src/api/routes/nbaSite';
 
 try {
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nba-app', {
@@ -31,7 +31,7 @@ app.use(cookieParser());
 
 
 app.use('/api/auth', authRouter);
-app.use('/api/rapidapi', rapidApi);
+app.use('/api/nbasite', nbaSite);
 
 
 export default app;

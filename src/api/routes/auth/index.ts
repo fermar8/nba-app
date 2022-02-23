@@ -11,7 +11,7 @@ authRouter.post('/register', async (req: Request, res: Response) => {
 	const signedToken: string = await AuthService.signToken(userData, env.JWT_SECRET as string);
 	try {
 		await AuthService.createUser(userData, hashedPassword, signedToken);
-		await AuthService.sendCookie(signedToken, res);
+		await AuthService.sendCookieAndUser(signedToken, res);
 	} catch (err: any) {
 		await ResponsesService.sendBadRequestResponse('User creation failed', err.message, res);
 	}

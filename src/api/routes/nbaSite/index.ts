@@ -3,9 +3,9 @@ import axios, { Method } from 'axios';
 import { Router, Request, Response } from 'express';
 import { ResponsesService } from '../../services';
 
-export const rapidApi = Router();
+export const nbaSite = Router();
 
-rapidApi.get('/player', async (req: Request, res: Response) => {
+nbaSite.get('/player', async (req: Request, res: Response) => {
     const playerId = req.body.playerId;
 
     try {
@@ -26,7 +26,7 @@ rapidApi.get('/player', async (req: Request, res: Response) => {
 	
 });
 
-rapidApi.get('/player/name', async (req: Request, res: Response) => {
+nbaSite.get('/player/name', async (req: Request, res: Response) => {
     const playerName = req.body.playerName;
  
      try {
@@ -46,7 +46,7 @@ rapidApi.get('/player/name', async (req: Request, res: Response) => {
      }	
  });
 
-rapidApi.get('/player/statistics', async (req: Request, res: Response) => {
+nbaSite.get('/player/statistics', async (req: Request, res: Response) => {
    const playerId = req.body.playerId;
 
     try {

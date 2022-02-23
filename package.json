@@ -62,6 +62,7 @@
     "express-session": "^1.17.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.9",
+    "puppeteer": "13.4.0",
     "typescript-logger": "^5.0.1"
   }
 }
