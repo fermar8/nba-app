@@ -2,7 +2,6 @@ import { Response } from 'express';
 
 class ResponsesService {
     sendOkPost = async (message: string, res: Response, payload?: any) => {
-        console.log('payload', payload)
         res.status(200).json({
             status: 'ok',
             message,

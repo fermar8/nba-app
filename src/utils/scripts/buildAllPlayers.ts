@@ -8,25 +8,22 @@ const run = async () => {
     try {
         const options = {
             method: 'GET' as Method,
-            url: `https://api-nba-v1.p.rapidapi.com/players/league/standard`,
-            headers: {
-                'x-rapidapi-host': 'api-nba-v1.p.rapidapi.com',
-                'x-rapidapi-key': '00d5d18222msh3995671da32df35p1a9c04jsn4801a4d80b73'
-            }
+            url: `https://es.global.nba.com/stats2/league/playerlist.json?locale=es`,
         };
 
         const response = await axios.request(options);
-        const allPlayers: Array<any> = response.data.api.players;
+        const allPlayers = response.data.payload.players;
+        /* 
 
         const allActivePlayers = allPlayers.filter(el => el.leagues.standard.active === "1" && el.teamId && el.yearsPro && el.collegeName && el.country && el.playerId && el.dateOfBirth && el.affiliation && el.startNba && el.heightInMeters && el.weightInKilograms);
-
-        const stringify = JSON.stringify(allActivePlayers, null, 2);
+        */
+        const stringify = JSON.stringify(allPlayers, null, 2);
         fs.writeFile('./../rosters/AllPlayers.json', stringify, function (err) {
             if (err) {
                 return console.error(err);
             }
             console.log("File created!");
-        });
+        }); 
 
     } catch (error) {
         console.log(error)

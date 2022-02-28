@@ -6,10 +6,11 @@ import { UserData } from './types';
 export const authRouter = Router();
 
 authRouter.post('/register', async (req: Request, res: Response) => {
-	const userData: UserData = await AuthService.getUserData(req);
-	const hashedPassword: string = await AuthService.createPassword(userData.password);
-	const signedToken: string = await AuthService.signToken(userData, env.JWT_SECRET as string);
 	try {
+		const userData: UserData = await AuthService.getUserData(req);
+		const hashedPassword: string = await AuthService.createPassword(userData.password);
+		const signedToken: string = await AuthService.signToken(userData, env.JWT_SECRET as string);
+
 		await AuthService.createUser(userData, hashedPassword, signedToken);
 		await AuthService.sendCookieAndUser(signedToken, res);
 	} catch (err: any) {
@@ -49,7 +50,7 @@ authRouter.put('/logout', async (req: Request, res: Response) => {
 		const headersToken: string = await AuthService.sliceToken(req);
 		const isTokenValid = await AuthService.verifyToken(headersToken, env.JWT_SECRET as string);
 		if (isTokenValid) {
-			await AuthService.TokenController.deleteTokenFromDb(headersToken);
+			await AuthService.TokenRepository.deleteTokenFromDb(headersToken);
 			await ResponsesService.sendOkNoContent('Token deleted and logged out successfully', res);
 		}
 	} catch (err: any) {
