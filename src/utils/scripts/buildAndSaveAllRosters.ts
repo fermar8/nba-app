@@ -1,6 +1,5 @@
 import axios, { Method } from 'axios';
 import NbaTeam from '../../models/nba-data/nbaTeam.js';
-import NbaTeamExtended from '../../models/nba-data/nbaTeamExtended.js';
 import mongoose from 'mongoose';
 import { env } from '../../../config.js';
 
