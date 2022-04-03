@@ -13,6 +13,6 @@ const NbaTeam = new mongoose.Schema(
 	}
 )
 
-const model = mongoose.model('NbaTeamData', NbaTeam)
+const model = mongoose.model('NbaTeam', NbaTeam)
 
 export default model

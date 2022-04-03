@@ -5,6 +5,7 @@ const NbaPlayer = new mongoose.Schema(
 		displayName: { type: String, required: true },
 		code: { type: String, required: true },
       	team: { type: mongoose.Schema.Types.ObjectId, ref: "NbaTeam", required: true },
+		stats: { type: mongoose.Schema.Types.ObjectId, ref: "PlayerStats" },
 	},
     {
 ​        collection: 'Nba-Players',
@@ -12,6 +13,6 @@ const NbaPlayer = new mongoose.Schema(
 ​   }
 )
 
-const model = mongoose.model('PlayerData', NbaPlayer)
+const model = mongoose.model('NbaPlayer', NbaPlayer)
 
 export default model
