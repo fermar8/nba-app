@@ -23,12 +23,9 @@ import {
     PlayerSingleGameDbType
 } from '../../types/nbaData';
 
-import { ResponsesService } from '../../services';
-import { Response } from 'express';
-
 
 class NbaDataService {
-    buildAndSaveAllTeams = async (res: Response) => {
+    buildAndSaveAllTeams = async () => {
         try {
             const options = buildOptions(env.NBA_DATA_TEAMS_URL as string);
 
@@ -60,12 +57,12 @@ class NbaDataService {
             await NbaTeam.deleteMany();
             await NbaTeam.insertMany(teams);
         } catch (err: any) {
-            await ResponsesService.sendUnexpectedErrorResponse('Error when updating teams ', err.message, res);
+            console.log('Error when updating teams');
         }
 
     }
 
-    buildAndSaveAllPlayers = async (res: Response) => {
+    buildAndSaveAllPlayers = async () => {
         try {
             await NbaPlayer.deleteMany();
             const options = buildOptions(env.NBA_DATA_PLAYERS_URL as string);
@@ -104,12 +101,12 @@ class NbaDataService {
             await NbaPlayer.deleteMany();
             await NbaPlayer.insertMany(playersToDb);
         } catch (err: any) {
-            await ResponsesService.sendUnexpectedErrorResponse('Error when updating players', err.message, res);
+            console.log('Error when updating players');
         }
 
     }
 
-    buildAndSavePlayerSeasonStats = async (res: Response) => {
+    buildAndSavePlayerSeasonStats = async () => {
         try {
             const seasonId = '2021-22';
             const perMode = 'PerGame';
@@ -193,12 +190,12 @@ class NbaDataService {
             await PlayerStatsPerGame.deleteMany();
             await PlayerStatsPerGame.insertMany(allPlayerPerGameStats);
         } catch (err: any) {
-            await ResponsesService.sendUnexpectedErrorResponse('Error when updating season stats', err.message, res);
+            console.log('Error when updating season stats');
         }
 
     }
 
-    buildAndSaveLast5GamesStats = async (res: Response) => {
+    buildAndSaveLast5GamesStats = async () => {
         try {
             const seasonId = '2021-22';
             const perMode = 'PerGame';
@@ -283,11 +280,11 @@ class NbaDataService {
             await PlayerStatsLast5.deleteMany();
             await PlayerStatsLast5.insertMany(allLastFive);
         } catch (err: any) {
-            await ResponsesService.sendUnexpectedErrorResponse('Error when updating last five games stats', err.message, res);
+            console.log('Error when updating last five games stats');
         }
     }
 
-    buildAndSaveAllGamesByPlayer = async (res: Response) => {
+    buildAndSaveAllGamesByPlayer = async () => {
         try {
             const seasonId = '2021-22';
             const options = buildOptionsWithHeaders(`https://stats.nba.com/stats/leaguegamelog?Counter=1000&DateFrom=&DateTo=&Direction=DESC&LeagueID=00&PlayerOrTeam=P&Season=${seasonId}&SeasonType=Regular+Season&Sorter=DATE`);
@@ -334,12 +331,12 @@ class NbaDataService {
             await PlayerSingleGame.deleteMany();
             await PlayerSingleGame.insertMany(allGamesByPlayer);
         } catch (err: any) {
-            await ResponsesService.sendUnexpectedErrorResponse('Error when updating games by player', err.message, res);
+            console.log('Error when updating games by player');
         }
 
     }
 
-    saveAndBuildAllPlayerStats = async (res: Response) => {
+    saveAndBuildAllPlayerStats = async () => {
         try {
             await PlayerStats.deleteMany();
             const allPlayers = await NbaPlayer.find();
@@ -359,7 +356,7 @@ class NbaDataService {
                 await NbaPlayer.findByIdAndUpdate(player._id, { $set: { stats: createdStats._id } })
             }
         } catch (err: any) {
-            await ResponsesService.sendUnexpectedErrorResponse('Error when updating player stats in db', err.message, res)
+            console.log('Error when updating player stats in db')
         }
 
     }

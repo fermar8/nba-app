@@ -1,4 +1,4 @@
-import { UserData } from '../../../api/routes/auth/types';
+import { UserData } from '../../../api/types/auth';
 import { Request, Response } from 'express';
 
 import ResponsesService from '../ResponsesService/';

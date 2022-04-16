@@ -1,4 +1,4 @@
-import { UserData } from '../../../routes/auth/types';
+import { UserData } from '../../../types/auth';
 import User from '../../../../models/nba-app/user';
 import jwt from 'jsonwebtoken';
 

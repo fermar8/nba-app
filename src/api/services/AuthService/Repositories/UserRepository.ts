@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import User from '../../../../models/nba-app/user';
-import { UserData } from '../../../routes/auth/types';
+import { UserData } from '../../../types/auth';
 
 
 class UserRepository {
