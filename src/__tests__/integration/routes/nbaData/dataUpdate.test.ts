@@ -1,20 +1,18 @@
 import request from 'supertest';
 import app from '../../../../../app';
 import mongoose from 'mongoose';
-import User from '../../../../models/nba-app/user';
-const databaseName = 'register-test';
+import {
+    NbaTeam,
+    NbaPlayer,
+    PlayerStats,
+    PlayerStatsPerGame,
+    PlayerStatsLast5,
+    PlayerSingleGame
+} from '../../../../models/nba-data';
+const databaseName = 'nba-data-update-test';
 const url = `mongodb://localhost:27017/${databaseName}`;
 
-describe("post api/auth/register", () => {
-    const mockUser = {
-        name: 'aName',
-        email: 'anEmail',
-        password: '123456',
-    }
-    const mockFailUser = {
-        name: 'aName',
-        password: '123456',
-    }
+describe("post api/nbadata/nbadataupdate", () => {
     beforeAll(async () => {
         await mongoose.disconnect();
         await mongoose.connect(url, {
@@ -25,16 +23,21 @@ describe("post api/auth/register", () => {
         })
     });
     afterEach(async () => {
-        await User.deleteMany()
+        await NbaTeam.deleteMany()
+        await NbaPlayer.deleteMany()
+        await PlayerStats.deleteMany()
+        await PlayerStatsPerGame.deleteMany()
+        await PlayerStatsLast5.deleteMany()
+        await PlayerSingleGame.deleteMany()
     })
     describe("success cases", () => {
-        test("respond with a 200 status if user registers and cookie is sent", async () => {
-            const response = await request(app).post('/api/auth/register').send(mockUser);
-            expect(response.statusCode).toBe(200);
+        test("respond with a 201 status if all data is successfully stored in db", async () => {
+            const response = await request(app).post('/api/nbadata/nbadataupdate');
+            expect(response.statusCode).toBe(201);
         });
-        test("save user to database", async () => {
-            const expectedUser = mockUser;
-            await request(app).post('/api/auth/register').send(mockUser);
+        test("save all data to db", async () => {
+
+            await request(app).post('/api/nbadata/nbadataupdate');
             const user = await User.findOne({ email: 'anEmail' });
             expect(user.toJSON()).toEqual(expect.objectContaining({
                 _id: expect.anything(),

@@ -1,7 +1,7 @@
 import { env } from '../../../../config';
 import { Router, Request, Response } from 'express';
 import { AuthService, ResponsesService, SendGridService } from '../../services';
-import { UserData } from './types';
+import { UserData } from '../../types/auth';
 
 export const authRouter = Router();
 

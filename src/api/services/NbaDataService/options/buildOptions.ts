@@ -3,7 +3,7 @@ import { Method } from 'axios';
 const buildOptions = (url: string) => {
     return {
         method: 'GET' as Method,
-        url: url,
+        url,
     };
 }
 
@@ -22,7 +22,7 @@ const buildOptionsWithHeaders = (url:string) => {
             'Accept-Language': 'en-US,en;q=0.9',
         },
         method: 'GET' as Method,
-        url: url,
+        url,
     }
 }
 

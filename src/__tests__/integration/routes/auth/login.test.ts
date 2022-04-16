@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../../../../app';
 import mongoose from 'mongoose';
-import User from '../../../../models/user';
+import User from '../../../../models/nba-app/user';
 const databaseName = 'login-test';
 const url = `mongodb://localhost:27017/${databaseName}`;
 

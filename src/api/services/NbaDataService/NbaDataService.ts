@@ -1,22 +1,33 @@
 import axios from 'axios';
+import { ObjectId } from 'mongoose';
 import { buildOptions, buildOptionsWithHeaders } from './options/buildOptions';
 import { env } from '../../../../config';
 
+import {
+    NbaTeam,
+    NbaPlayer,
+    PlayerStats,
+    PlayerStatsPerGame,
+    PlayerStatsLast5,
+    PlayerSingleGame
+} from '../../../models/nba-data';
 
-import NbaTeam from '../../../models/nba-data/nbaTeam';
-import NbaPlayer from '../../../models/nba-data/nbaPlayer';
-import PlayerStats from '../../../models/nba-data/playerStats';
-import PlayerStatsPerGame from '../../../models/nba-data/playerStatsPerGame';
-import PlayerStatsLast5 from '../../../models/nba-data/playerStatsLast5';
-import PlayerSingleGame from '../../../models/nba-data/playerSingleGame';
-import { NbaTeamType } from '../../routes/nbaData/types/NbaTeam';
-import { NbaPlayerType } from '../../routes/nbaData/types/NbaPlayer';
+import {
+    NbaPlayerType,
+    NbaTeamType,
+    PlayerPerGameStatsNewType,
+    PlayerLastFiveNewType,
+    PlayerSingleGameNewType,
+    PlayerPerGameStatsDbType,
+    PlayerLastFiveDbType,
+    PlayerSingleGameDbType
+} from '../../types/nbaData';
 
 import { ResponsesService } from '../../services';
 import { Response } from 'express';
 
 
-class NbaSiteService {
+class NbaDataService {
     buildAndSaveAllTeams = async (res: Response) => {
         try {
             const options = buildOptions(env.NBA_DATA_TEAMS_URL as string);
@@ -26,9 +37,9 @@ class NbaSiteService {
             const westConferenceTeams = response.data.payload.listGroups[1].teams;
             const allTeams = [...eastConferenceTeams, ...westConferenceTeams];
 
-            let teams: any = [];
+            const teams: NbaTeamType[] = [];
             allTeams.forEach((team) => {
-                let newObject: NbaTeamType = {
+                const newTeam: NbaTeamType = {
                     city: team.profile.city,
                     name: team.profile.name,
                     code: team.profile.code,
@@ -43,7 +54,7 @@ class NbaSiteService {
                     leagueId: team.profile.leagueId,
                     nameEn: team.profile.nameEn
                 }
-                teams.push(newObject);
+                teams.push(newTeam);
                 return teams;
             })
             await NbaTeam.deleteMany();
@@ -61,11 +72,11 @@ class NbaSiteService {
 
             const response = await axios.request(options);
             const allPlayers = response.data.payload.players;
-            const playersToDb = [];
+            const playersToDb: NbaPlayerType[] = [];
 
             for (const player of allPlayers) {
                 const findPlayersTeam = await NbaTeam.findOne({ code: player.teamProfile.code });
-                const newObject: NbaPlayerType = {
+                const newPlayer: NbaPlayerType = {
                     team: findPlayersTeam._id,
                     code: player.playerProfile.code,
                     displayName: player.playerProfile.displayName,
@@ -88,7 +99,7 @@ class NbaSiteService {
                     schoolType: player.playerProfile.schoolType,
                     weight: player.playerProfile.weight
                 };
-                playersToDb.push(newObject);
+                playersToDb.push(newPlayer);
             }
             await NbaPlayer.deleteMany();
             await NbaPlayer.insertMany(playersToDb);
@@ -105,11 +116,11 @@ class NbaSiteService {
             const options = buildOptionsWithHeaders(`https://stats.nba.com/stats/leaguedashplayerstats?College=&Conference=&Country=&DateFrom=&DateTo=&Division=&DraftPick=&DraftYear=&GameScope=&GameSegment=&Height=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PaceAdjust=N&PerMode=${perMode}&Period=0&PlayerExperience=&PlayerPosition=&PlusMinus=N&Rank=N&Season=${seasonId}&SeasonSegment=&SeasonType=Regular+Season&ShotClockRange=&StarterBench=&TeamID=0&TwoWay=0&VsConference=&VsDivision=&Weight=`);
             const response: any = await axios.request(options);
             const playerInfo = response.data.resultSets[0].rowSet;
-            const allPlayerPerGameStats: any = [];
+            const allPlayerPerGameStats: PlayerPerGameStatsNewType[] = [];
 
             playerInfo.forEach(async (el: any[]) => {
-                const playerPerGameStats = {
-                    seasonId: seasonId,
+                const playerPerGameStats: PlayerPerGameStatsNewType = {
+                    seasonId,
                     playerId: el[0],
                     displayName: el[1],
                     firstName: el[2],
@@ -195,11 +206,11 @@ class NbaSiteService {
             const options = buildOptionsWithHeaders(`https://stats.nba.com/stats/leaguedashplayerstats?College=&Conference=&Country=&DateFrom=&DateTo=&Division=&DraftPick=&DraftYear=&GameScope=&GameSegment=&Height=&LastNGames=${lastNGames}&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PaceAdjust=N&PerMode=${perMode}&Period=0&PlayerExperience=&PlayerPosition=&PlusMinus=N&Rank=N&Season=${seasonId}&SeasonSegment=&SeasonType=Regular+Season&ShotClockRange=&StarterBench=&TeamID=0&TwoWay=0&VsConference=&VsDivision=&Weight=`);
             const response: any = await axios.request(options);
             const playerInfo = response.data.resultSets[0].rowSet;
-            const allLastFive: any = [];
+            const allLastFive: PlayerLastFiveNewType[] = [];
 
             playerInfo.forEach(async (el: any[]) => {
-                const lastFive = {
-                    seasonId: seasonId,
+                const lastFive: PlayerLastFiveNewType = {
+                    seasonId,
                     playerId: el[0],
                     displayName: el[1],
                     firstName: el[2],
@@ -282,11 +293,11 @@ class NbaSiteService {
             const options = buildOptionsWithHeaders(`https://stats.nba.com/stats/leaguegamelog?Counter=1000&DateFrom=&DateTo=&Direction=DESC&LeagueID=00&PlayerOrTeam=P&Season=${seasonId}&SeasonType=Regular+Season&Sorter=DATE`);
             const response: any = await axios.request(options);
             const gamesInfo = response.data.resultSets[0].rowSet;
-            const allGamesByPlayer: any = [];
+            const allGamesByPlayer: PlayerSingleGameNewType[] = [];
 
             gamesInfo.forEach(async (el: any[]) => {
-                const gameByPlayer = {
-                    seasonId: seasonId,
+                const gameByPlayer: PlayerSingleGameNewType = {
+                    seasonId,
                     displayName: el[2],
                     teamId: el[3],
                     teamAbbreviation: el[4],
@@ -333,10 +344,10 @@ class NbaSiteService {
             await PlayerStats.deleteMany();
             const allPlayers = await NbaPlayer.find();
             for (const player of allPlayers) {
-                const playerStatsPerGame = await PlayerStatsPerGame.findOne({ displayName: player.displayName });
-                const playerStatsLast5 = await PlayerStatsLast5.findOne({ displayName: player.displayName });
-                const playerStatsSingleGame = await PlayerSingleGame.find({ displayName: player.displayName });
-                const gameIds = await playerStatsSingleGame.map((game: { _id: any; }) => {
+                const playerStatsPerGame: PlayerPerGameStatsDbType = await PlayerStatsPerGame.findOne({ displayName: player.displayName });
+                const playerStatsLast5: PlayerLastFiveDbType = await PlayerStatsLast5.findOne({ displayName: player.displayName });
+                const playerStatsSingleGame: PlayerSingleGameDbType[] = await PlayerSingleGame.find({ displayName: player.displayName });
+                const gameIds = await playerStatsSingleGame.map((game: { _id: ObjectId; }) => {
                     return game._id
                 });
                 const createdStats = await PlayerStats.create({
@@ -355,6 +366,6 @@ class NbaSiteService {
 
 }
 
-const nbaSiteService = new NbaSiteService();
+const nbaDataService = new NbaDataService();
 
-export default nbaSiteService;
+export default nbaDataService;

@@ -1,4 +1,4 @@
-import axios, { Method } from 'axios';
+/* import axios, { Method } from 'axios';
 import mongoose from 'mongoose';
 import SeasonStatsByPlayer from '../../models/nba-data/seasonStatsByPlayer';
 import { env } from '../../../config.js';
@@ -18,7 +18,7 @@ const run = async () => {
     const perMode = 'Totals';
     const headers = {
         'Connection': 'keep-alive',
-        'Accept': 'application/json, text/plain, */*',
+        'Accept': 'application/json, text/plain, ',
         'x-nba-stats-token': 'true',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
         'x-nba-stats-origin': 'stats',
@@ -117,14 +117,16 @@ const run = async () => {
     } catch (error) {
         console.log(error)
 
-        /* fs.writeFile('./../rosters/AllPlayers.json', stringify, function (err) {
+        fs.writeFile('./../rosters/AllPlayers.json', stringify, function (err) {
             if (err) {
                 return console.error(err);
             }
             console.log("File created!");
-        }); */
+        }); 
     }
 }
 
 
 run();
+
+*/
