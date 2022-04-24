@@ -6,6 +6,7 @@ const NbaPlayer = new mongoose.Schema(
 		code: { type: String, required: true },
       	team: { type: mongoose.Schema.Types.ObjectId, ref: "NbaTeam", required: true },
 		stats: { type: mongoose.Schema.Types.ObjectId, ref: "PlayerStats" },
+		playerValue: { type: mongoose.Schema.Types.ObjectId, ref: "PlayerValue"}
 	},
     {
 ​        collection: 'Nba-Players',

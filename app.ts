@@ -34,7 +34,7 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
 
-cron.schedule('0 0 */3 * * *', async function () {
+cron.schedule('0 0 */8 * * *', async function () {
     try {
         await NbaDataService.buildAndSaveAllTeams();
         await NbaDataService.buildAndSaveAllPlayers();
@@ -43,7 +43,7 @@ cron.schedule('0 0 */3 * * *', async function () {
         await NbaDataService.buildAndSaveAllGamesByPlayer();
         await NbaDataService.saveAndBuildAllPlayerStats();
         console.log('All nba data updated successfully in DB');
-        console.log('Task running every 3 hours');
+        console.log('Task running every 8 hours');
     } catch (err: any) {
         console.log('Could not update nba data', err)
     }

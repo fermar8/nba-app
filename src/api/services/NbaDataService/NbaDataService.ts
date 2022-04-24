@@ -358,7 +358,12 @@ class NbaDataService {
         } catch (err: any) {
             console.log('Error when updating player stats in db')
         }
+    }
 
+    buildPlayerGameData = async () => {
+        const playerAndStats = await PlayerStatsPerGame.find();
+
+        console.log('playerAndStats', playerAndStats);
     }
 
 }

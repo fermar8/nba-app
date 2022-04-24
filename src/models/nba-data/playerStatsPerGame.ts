@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 const PlayerStatsPerGame = new mongoose.Schema(
 	{
 		displayName: { type: String, required: true },
+		nbaFantasyPts: { type: Number }
     },
 	{
 		collection: 'Player-Stats-Per-Game',
