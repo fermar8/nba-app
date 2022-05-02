@@ -1,0 +1,45 @@
+{
+    "data": {
+        "payload": {
+            "listGroups": [{
+                    "teams": [{
+                        "profile": {
+                            "city": "aCity",
+                            "name": "aName",
+                            "code": "aCode",
+                            "abbr": "anAbbr",
+                            "cityEn": "aCityEn",
+                            "conference": "aConference",
+                            "displayAbbr": "aDisplayAbbr",
+                            "displayConference": "aDisplayConference",
+                            "division": "aDivision",
+                            "isAllStarTeam": true,
+                            "isLeagueTeam": true,
+                            "leagueId": "aLeagueId",
+                            "nameEn": "aNameEn"
+                        }
+                    }]
+                },
+                {
+                    "teams": [{
+                        "profile": {
+                            "city": "aCity",
+                            "name": "aName",
+                            "code": "anotherCode",
+                            "abbr": "anAbbr",
+                            "cityEn": "aCityEn",
+                            "conference": "aConference",
+                            "displayAbbr": "aDisplayAbbr",
+                            "displayConference": "aDisplayConference",
+                            "division": "aDivision",
+                            "isAllStarTeam": true,
+                            "isLeagueTeam": true,
+                            "leagueId": "aLeagueId",
+                            "nameEn": "aNameEn"
+                        }
+                    }]
+                }
+            ]
+        }
+    }
+}

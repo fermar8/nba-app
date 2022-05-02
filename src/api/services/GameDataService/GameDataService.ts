@@ -9,22 +9,22 @@ class GameDataService {
             const nbaPlayer = await NbaPlayer.find().populate({ path: 'stats', model: PlayerStats, populate: { path: 'perGame', model: PlayerStatsPerGame } });
     
             const playerValues = await Promise.all(nbaPlayer.map(async (player: any) => {
-                let playerValues;
+                let newPlayerValues;
     
                 if (statsLastSeason.some((el: any) => el.displayName === player.displayName)) {
-                    playerValues = {
+                    newPlayerValues = {
                         displayName: player.displayName,
                         value: buildValue(player.stats.perGame),
                         increment: 0
                     }
                 } else {
-                    playerValues = {
+                    newPlayerValues = {
                         displayName: player.displayName,
                         value: 200000,
                         increment: 0
                     }
                 }
-                return playerValues;
+                return newPlayerValues;
             })
             )
             await PlayerValue.deleteMany();

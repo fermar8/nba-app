@@ -1,0 +1,32 @@
+[
+    {
+        "city": "aCity",
+        "name": "aName",
+        "code": "aCode",
+        "abbr": "anAbbr",
+        "cityEn": "aCityEn",
+        "conference": "aConference",
+        "displayAbbr": "aDisplayAbbr",
+        "displayConference": "aDisplayConference",
+        "division": "aDivision",
+        "isAllStarTeam": true,
+        "isLeagueTeam": true,
+        "leagueId": "aLeagueId",
+        "nameEn": "aNameEn"
+    },
+    {
+        "city": "aCity",
+        "name": "aName",
+        "code": "anotherCode",
+        "abbr": "anAbbr",
+        "cityEn": "aCityEn",
+        "conference": "aConference",
+        "displayAbbr": "aDisplayAbbr",
+        "displayConference": "aDisplayConference",
+        "division": "aDivision",
+        "isAllStarTeam": true,
+        "isLeagueTeam": true,
+        "leagueId": "aLeagueId",
+        "nameEn": "aNameEn"
+    }
+]

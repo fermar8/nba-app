@@ -8,8 +8,8 @@ export interface NbaTeamType {
     displayAbbr?: string;
     displayConference?: string;
     division?: string;
-    isAllStarTeam?: string;
-    isLeagueTeam?: string;
+    isAllStarTeam?: boolean;
+    isLeagueTeam?: boolean;
     leagueId?: string;
     nameEn?: string;
 }

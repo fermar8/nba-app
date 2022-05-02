@@ -33,7 +33,6 @@ class NbaDataService {
     buildAndSaveAllTeams = async () => {
         try {
             const options = buildOptions(env.NBA_DATA_TEAMS_URL as string);
-
             const response = await axios.request(options);
             const eastConferenceTeams = response.data.payload.listGroups[0].teams;
             const westConferenceTeams = response.data.payload.listGroups[1].teams;
@@ -61,8 +60,9 @@ class NbaDataService {
             })
             await NbaTeam.deleteMany();
             await NbaTeam.insertMany(teams);
+            console.log('Teams created successfully');
         } catch (err: any) {
-            console.log('Error when updating teams', err);
+            console.error('Error when updating teams', err);
         }
 
     }
@@ -70,7 +70,6 @@ class NbaDataService {
     buildAndSaveAllPlayers = async () => {
         try {
             const options = buildOptions(env.NBA_DATA_PLAYERS_URL as string);
-
             const response = await axios.request(options);
             const allPlayers = response.data.payload.players;
             const playersToDb: NbaPlayerType[] = [];
@@ -107,8 +106,9 @@ class NbaDataService {
                 }
             }
             await NbaPlayer.insertMany(playersToDb);
+            console.log('Players updated successfully')
         } catch (err: any) {
-            console.log('Error when updating players', err);
+            console.error('Error when updating players', err);
         }
 
     }
@@ -198,7 +198,7 @@ class NbaDataService {
             await PlayerStatsPerGame.deleteMany();
             await PlayerStatsPerGame.insertMany(allPlayerPerGameStats);
         } catch (err: any) {
-            console.log('Error when updating season stats', err);
+            console.error('Error when updating season stats', err);
         }
 
     }
@@ -288,14 +288,14 @@ class NbaDataService {
             await PlayerStatsLast5.deleteMany();
             await PlayerStatsLast5.insertMany(allLastFive);
         } catch (err: any) {
-            console.log('Error when updating last five games stats', err);
+            console.error('Error when updating last five games stats', err);
         }
     }
 
     buildAndSaveAllGamesByPlayer = async () => {
         try {
             const seasonId = '2021-22';
-            const options = buildOptionsWithHeaders(`https://stats.nba.com/stats/leaguegamelog?Counter=1000&DateFrom=&DateTo=&Direction=DESC&LeagueID=00&PlayerOrTeam=P&Season=${seasonId}&SeasonType=Regular+Season&Sorter=DATE`);
+            const options = buildOptionsWithHeaders(`https://stats.nba.com/stats/leaguegameerror?Counter=1000&DateFrom=&DateTo=&Direction=DESC&LeagueID=00&PlayerOrTeam=P&Season=${seasonId}&SeasonType=Regular+Season&Sorter=DATE`);
             const response: any = await axios.request(options);
             const gamesInfo = response.data.resultSets[0].rowSet;
             const allGamesByPlayer: PlayerSingleGameNewType[] = [];
@@ -339,7 +339,7 @@ class NbaDataService {
             await PlayerSingleGame.deleteMany();
             await PlayerSingleGame.insertMany(allGamesByPlayer);
         } catch (err: any) {
-            console.log('Error when updating games by player', err);
+            console.error('Error when updating games by player', err);
         }
 
     }
@@ -364,7 +364,7 @@ class NbaDataService {
                 await NbaPlayer.findByIdAndUpdate(player._id, { $set: { stats: createdStats._id, injuryReport: null } })
             }
         } catch (err: any) {
-            console.log('Error when updating player stats in db', err)
+            console.error('Error when updating player stats in db', err)
         }
     }
 
@@ -398,7 +398,7 @@ class NbaDataService {
                 }
             }
         } catch (err: any) {
-            console.log('Error when updating player values', err);
+            console.error('Error when updating player values', err);
         }
     }
 
@@ -418,9 +418,9 @@ class NbaDataService {
             }
             await PlayerInjuryReport.insertMany(reportsToDb);
             await this.saveInjuryReportToPlayer();
-            console.log('Injury reports were updated')
+            console.error('Injury reports were updated')
         } catch (err: any) {
-            console.log('Error when updating injury reports', err);
+            console.error('Error when updating injury reports', err);
         }
     }
 
@@ -433,6 +433,5 @@ class NbaDataService {
     }
 }
 
-const nbaDataService = new NbaDataService();
 
-export default nbaDataService;
+export default NbaDataService;

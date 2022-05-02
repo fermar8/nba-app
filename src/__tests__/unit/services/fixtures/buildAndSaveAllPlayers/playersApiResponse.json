@@ -1,0 +1,33 @@
+{
+    "data": {
+        "payload": {
+            "players": [{
+                "playerProfile": {
+                    "code": "aCode",
+                    "displayName": "aName",
+                    "country": "aCountry",
+                    "countryEn": "aCountryEn",
+                    "displayAffiliation": "anAffiliation",
+                    "displayNameEn": "aDisplayNameEn",
+                    "dob": "aDob",
+                    "draftYear": "aDraftYear",
+                    "experience": "anExperience",
+                    "firstInitial": "aFirstInitial",
+                    "firstName": "aFirstName",
+                    "firstNameEn": "aFirstNameEn",
+                    "height": "aHeight",
+                    "jerseyNo": "aJerseyNo",
+                    "lastName": "aLastName",
+                    "lastNameEn": "aLastNameEn",
+                    "leagueId": "aLeagueId",
+                    "position": "aPosition",
+                    "schoolType": "aSchoolType",
+                    "weight": "aWeight"
+                },
+                "teamProfile": {
+                    "code": "aCode"
+                }
+            }]
+        }
+    }
+}
