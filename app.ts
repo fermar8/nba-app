@@ -34,14 +34,16 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
 
-cron.schedule('0 0 */8 * * *', async function () {
+//'*/2 * * * *'
+//'0 0 */8 * * *'
+cron.schedule('*/2 * * * *', async function () {
     try {
-        await NbaDataService.buildAndSaveAllTeams();
         await NbaDataService.buildAndSaveAllPlayers();
         await NbaDataService.buildAndSavePlayerSeasonStats();
         await NbaDataService.buildAndSaveLast5GamesStats();
         await NbaDataService.buildAndSaveAllGamesByPlayer();
-        await NbaDataService.saveAndBuildAllPlayerStats();
+        await NbaDataService.buildAndSaveAllPlayerStats();
+        await NbaDataService.buildAndSaveInjuryReports();
         console.log('All nba data updated successfully in DB');
         console.log('Task running every 8 hours');
     } catch (err: any) {

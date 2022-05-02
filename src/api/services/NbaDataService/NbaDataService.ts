@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { ObjectId } from 'mongoose';
 import { buildOptions, buildOptionsWithHeaders } from './options/buildOptions';
+import { playerValueMapper } from '../GameDataService/utils/playerValueMapper';
+import { comparePlayerValuesAndGetNewValues } from './utils/comparePlayersAndGetNewValues';
 import { env } from '../../../../config';
 
 import {
     NbaTeam,
     NbaPlayer,
+    PlayerInjuryReport,
     PlayerStats,
     PlayerStatsPerGame,
     PlayerStatsLast5,
@@ -22,6 +25,8 @@ import {
     PlayerLastFiveDbType,
     PlayerSingleGameDbType
 } from '../../types/nbaData';
+
+import { PlayerValue } from '../../../models/game-data';
 
 
 class NbaDataService {
@@ -57,14 +62,13 @@ class NbaDataService {
             await NbaTeam.deleteMany();
             await NbaTeam.insertMany(teams);
         } catch (err: any) {
-            console.log('Error when updating teams');
+            console.log('Error when updating teams', err);
         }
 
     }
 
     buildAndSaveAllPlayers = async () => {
         try {
-            await NbaPlayer.deleteMany();
             const options = buildOptions(env.NBA_DATA_PLAYERS_URL as string);
 
             const response = await axios.request(options);
@@ -72,39 +76,43 @@ class NbaDataService {
             const playersToDb: NbaPlayerType[] = [];
 
             for (const player of allPlayers) {
+                const doesPlayerExistInDb = await NbaPlayer.exists({ displayName: player.playerProfile.displayName });
                 const findPlayersTeam = await NbaTeam.findOne({ code: player.teamProfile.code });
-                const newPlayer: NbaPlayerType = {
-                    team: findPlayersTeam._id,
-                    code: player.playerProfile.code,
-                    displayName: player.playerProfile.displayName,
-                    country: player.playerProfile.country,
-                    countryEn: player.playerProfile.countryEn,
-                    displayAffiliation: player.playerProfile.displayAffiliation,
-                    displayNameEn: player.playerProfile.displayNameEn,
-                    dob: player.playerProfile.dob,
-                    draftYear: player.playerProfile.draftYear,
-                    experience: player.playerProfile.experience,
-                    firstInitial: player.playerProfile.firstInitial,
-                    firstName: player.playerProfile.firstName,
-                    firstNameEn: player.playerProfile.firstNameEn,
-                    height: player.playerProfile.height,
-                    jerseyNo: player.playerProfile.jerseyNo,
-                    lastName: player.playerProfile.lastName,
-                    lastNameEn: player.playerProfile.lastNameEn,
-                    leagueId: player.playerProfile.leagueId,
-                    position: player.playerProfile.position,
-                    schoolType: player.playerProfile.schoolType,
-                    weight: player.playerProfile.weight
-                };
-                playersToDb.push(newPlayer);
+
+                if (!doesPlayerExistInDb) {
+                    const newPlayer: NbaPlayerType = {
+                        team: findPlayersTeam._id,
+                        code: player.playerProfile.code,
+                        displayName: player.playerProfile.displayName,
+                        country: player.playerProfile.country,
+                        countryEn: player.playerProfile.countryEn,
+                        displayAffiliation: player.playerProfile.displayAffiliation,
+                        displayNameEn: player.playerProfile.displayNameEn,
+                        dob: player.playerProfile.dob,
+                        draftYear: player.playerProfile.draftYear,
+                        experience: player.playerProfile.experience,
+                        firstInitial: player.playerProfile.firstInitial,
+                        firstName: player.playerProfile.firstName,
+                        firstNameEn: player.playerProfile.firstNameEn,
+                        height: player.playerProfile.height,
+                        jerseyNo: player.playerProfile.jerseyNo,
+                        lastName: player.playerProfile.lastName,
+                        lastNameEn: player.playerProfile.lastNameEn,
+                        leagueId: player.playerProfile.leagueId,
+                        position: player.playerProfile.position,
+                        schoolType: player.playerProfile.schoolType,
+                        weight: player.playerProfile.weight
+                    };
+                    playersToDb.push(newPlayer);
+                }
             }
-            await NbaPlayer.deleteMany();
             await NbaPlayer.insertMany(playersToDb);
         } catch (err: any) {
-            console.log('Error when updating players');
+            console.log('Error when updating players', err);
         }
 
     }
+
 
     buildAndSavePlayerSeasonStats = async () => {
         try {
@@ -190,7 +198,7 @@ class NbaDataService {
             await PlayerStatsPerGame.deleteMany();
             await PlayerStatsPerGame.insertMany(allPlayerPerGameStats);
         } catch (err: any) {
-            console.log('Error when updating season stats');
+            console.log('Error when updating season stats', err);
         }
 
     }
@@ -280,7 +288,7 @@ class NbaDataService {
             await PlayerStatsLast5.deleteMany();
             await PlayerStatsLast5.insertMany(allLastFive);
         } catch (err: any) {
-            console.log('Error when updating last five games stats');
+            console.log('Error when updating last five games stats', err);
         }
     }
 
@@ -331,12 +339,12 @@ class NbaDataService {
             await PlayerSingleGame.deleteMany();
             await PlayerSingleGame.insertMany(allGamesByPlayer);
         } catch (err: any) {
-            console.log('Error when updating games by player');
+            console.log('Error when updating games by player', err);
         }
 
     }
 
-    saveAndBuildAllPlayerStats = async () => {
+    buildAndSaveAllPlayerStats = async () => {
         try {
             await PlayerStats.deleteMany();
             const allPlayers = await NbaPlayer.find();
@@ -344,7 +352,7 @@ class NbaDataService {
                 const playerStatsPerGame: PlayerPerGameStatsDbType = await PlayerStatsPerGame.findOne({ displayName: player.displayName });
                 const playerStatsLast5: PlayerLastFiveDbType = await PlayerStatsLast5.findOne({ displayName: player.displayName });
                 const playerStatsSingleGame: PlayerSingleGameDbType[] = await PlayerSingleGame.find({ displayName: player.displayName });
-                const gameIds = await playerStatsSingleGame.map((game: { _id: ObjectId; }) => {
+                const gameIds = playerStatsSingleGame.map((game: { _id: ObjectId; }) => {
                     return game._id
                 });
                 const createdStats = await PlayerStats.create({
@@ -353,19 +361,76 @@ class NbaDataService {
                     games: gameIds ? [...gameIds] : null
                 })
 
-                await NbaPlayer.findByIdAndUpdate(player._id, { $set: { stats: createdStats._id } })
+                await NbaPlayer.findByIdAndUpdate(player._id, { $set: { stats: createdStats._id, injuryReport: null } })
             }
         } catch (err: any) {
-            console.log('Error when updating player stats in db')
+            console.log('Error when updating player stats in db', err)
         }
     }
 
-    buildPlayerGameData = async () => {
-        const playerAndStats = await PlayerStatsPerGame.find();
+    updatePlayerValues = async () => {
+        try {
+            const nbaPlayers = await NbaPlayer.find();
+            const endDate = new Date('2022-04-10').toISOString().slice(0, 10)
+            const startDate = new Date('2022-04-10')
+            startDate.setDate(startDate.getDate() - 7);
 
-        console.log('playerAndStats', playerAndStats);
+            const begDate = startDate.toISOString().slice(0, 10);
+
+            for (const player of nbaPlayers) {
+                const playerSingleGames = await PlayerSingleGame.find({
+                    displayName: player.displayName, gameDate: {
+                        $gte: begDate,
+                        $lte: endDate
+                    }
+                })
+                const playerValue = await PlayerValue.findOne({ displayName: player.displayName });
+                const fantasyPtsLastWeek = playerSingleGames.reduce((accumulator: any, singleGame: any) => {
+                    return accumulator + singleGame.nbaFantasyPts
+                }, 0);
+
+                const fantasyPtsPerGameLastWeek = fantasyPtsLastWeek && fantasyPtsLastWeek > 0 ? fantasyPtsLastWeek / playerSingleGames.length : 0;
+                const playerValueLastWeek = playerValueMapper(fantasyPtsPerGameLastWeek);
+                if (playerValue && playerValueLastWeek) {
+                    const newValue = comparePlayerValuesAndGetNewValues(playerValueLastWeek, playerValue.value);
+                    await PlayerValue.findOneAndUpdate({ displayName: player.displayName }, {$set: {value: newValue.value, increment: newValue.increment}} )
+                    await NbaPlayer.findByIdAndUpdate(player._id, { $set: { playerValue: playerValue._id } })
+                }
+            }
+        } catch (err: any) {
+            console.log('Error when updating player values', err);
+        }
     }
 
+    buildAndSaveInjuryReports = async () => {
+        try {
+            await PlayerInjuryReport.deleteMany();
+            const options = buildOptions(env.NBA_DATA_INJURY_REPORT as string);
+            const response = await axios.request(options);
+            const reportsToDb = [];
+            for (const report of response.data) {
+                const newReport = {
+                    displayName: report.player,
+                    injury: report.injury,
+                    status: report.status
+                }
+                reportsToDb.push(newReport);
+            }
+            await PlayerInjuryReport.insertMany(reportsToDb);
+            await this.saveInjuryReportToPlayer();
+            console.log('Injury reports were updated')
+        } catch (err: any) {
+            console.log('Error when updating injury reports', err);
+        }
+    }
+
+    saveInjuryReportToPlayer = async () => {
+        const injuryReports = await PlayerInjuryReport.find();
+    
+        for (const report of injuryReports ) {
+            await NbaPlayer.findOneAndUpdate({ displayName: report.displayName } , { $set: { injuryReport: report._id } })
+        }
+    }
 }
 
 const nbaDataService = new NbaDataService();
