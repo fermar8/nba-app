@@ -358,10 +358,11 @@ class NbaDataService {
                 const createdStats = await PlayerStats.create({
                     perGame: playerStatsPerGame && playerStatsPerGame._id ? playerStatsPerGame._id : null,
                     lastFive: playerStatsLast5 && playerStatsLast5._id ? playerStatsLast5._id : null,
-                    games: gameIds ? [...gameIds] : null
+                    games: gameIds && gameIds.length > 0 ? [...gameIds] : null
                 })
 
-                await NbaPlayer.findByIdAndUpdate(player._id, { $set: { stats: createdStats._id, injuryReport: null } })
+                await NbaPlayer.findByIdAndUpdate(player._id, { $set: { stats: createdStats._id, injuryReport: null } });
+                console.log('All player stats saved correctly to DB')
             }
         } catch (err: any) {
             console.error('Error when updating player stats in db', err)
