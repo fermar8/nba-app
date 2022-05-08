@@ -2,7 +2,7 @@ import { UserData } from '../../../api/types/auth';
 import { Request, Response } from 'express';
 
 import ResponsesService from '../ResponsesService/';
-import { tokenRepository, userRepository } from './Repositories';
+import { tokenRepository, userRepository } from '../../repositories';
 
 
 class AuthService {

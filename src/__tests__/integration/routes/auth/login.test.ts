@@ -65,7 +65,7 @@ describe("post api/auth/login", () => {
     describe("failure cases", () => {
         test("respond with a 400 status if user login fails", async () => {
             const response = await request(app).post('/api/auth/login').send(mockFailLogin);
-            expect(response.statusCode).toBe(400);
+            expect(response.statusCode).toBe(404);
         });
     })
     afterAll(async (done) => {

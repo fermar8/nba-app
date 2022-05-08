@@ -1,0 +1,14 @@
+{
+    "data": [
+        {
+            "player": "aPlayer",
+            "injury": "anInjury",
+            "status": "aStatus"
+        },
+        {
+            "player": "anotherPlayer",
+            "injury": "anotherInjury",
+            "status": "anotherStatus"
+        }
+    ]
+}

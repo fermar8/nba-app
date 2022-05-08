@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
     NbaTeam,
     NbaPlayer,
-    // PlayerInjuryReport,
+    PlayerInjuryReport,
     PlayerStats,
     PlayerStatsPerGame,
     PlayerStatsLast5,
@@ -10,16 +10,19 @@ import {
 } from '../../../models/nba-data';
 import NbaDataService from '../../../api/services/NbaDataService/NbaDataService';
 
-import teamsApiResponse from './fixtures/buildAndSaveAllTeams/teamsApiResponse.json';
-import teams from './fixtures/buildAndSaveAllTeams/teams.json';
+import teamsApiResponse from './fixtures/nbaDataService/buildAndSaveAllTeams/teamsApiResponse.json';
+import teams from './fixtures/nbaDataService/buildAndSaveAllTeams/teams.json';
 
-import mockTeamFromDb from './fixtures/buildAndSaveAllPlayers/mockTeamFromDb.json'
-import playersApiResponse from './fixtures/buildAndSaveAllPlayers/playersApiResponse.json';
-import players from './fixtures/buildAndSaveAllPlayers/players.json';
+import mockTeamFromDb from './fixtures/nbaDataService/buildAndSaveAllPlayers/mockTeamFromDb.json'
+import playersApiResponse from './fixtures/nbaDataService/buildAndSaveAllPlayers/playersApiResponse.json';
+import players from './fixtures/nbaDataService/buildAndSaveAllPlayers/players.json';
 
-import playerStatsPerGame from './fixtures/buildAndSaveAllPlayerStats/playerStatsPerGame.json';
-import playerStatsLast5 from './fixtures/buildAndSaveAllPlayerStats/playerStatsLast5.json';
-import playerStatsSingleGame from './fixtures/buildAndSaveAllPlayerStats/playerStatsSingleGame.json';
+import playerStatsPerGame from './fixtures/nbaDataService/buildAndSaveAllPlayerStats/playerStatsPerGame.json';
+import playerStatsLast5 from './fixtures/nbaDataService/buildAndSaveAllPlayerStats/playerStatsLast5.json';
+import playerStatsSingleGame from './fixtures/nbaDataService/buildAndSaveAllPlayerStats/playerStatsSingleGame.json';
+
+import injuryReports from './fixtures/nbaDataService/buildAndSaveInjuryReports/injuryReports.json';
+import injuryReportsToDb from './fixtures/nbaDataService/buildAndSaveInjuryReports/injuryReportsToDb.json';
 
 jest.mock('axios');
 console.log = jest.fn();
@@ -132,6 +135,27 @@ describe("NbaDataService", () => {
         })
         test("Logs an error when DB operation fails", async () => {
             PlayerStats.deleteMany = jest.fn().mockImplementationOnce(() => {
+                throw new Error('anError');
+            });
+            await service.buildAndSaveAllPlayerStats();
+            expect(console.error).toHaveBeenCalledTimes(1);
+        })
+    });
+    describe("buildAndSaveInjuryReports", () => {
+        test("Builds and saves objectIds to PlayerStats and assigns them to a Player", async () => {
+            PlayerInjuryReport.deleteMany = jest.fn();
+            PlayerInjuryReport.insertMany = jest.fn();
+            (axios.request as jest.Mock).mockResolvedValueOnce(injuryReports);
+            service.saveInjuryReportToPlayer = jest.fn();
+            await service.buildAndSaveInjuryReports();
+            expect(PlayerInjuryReport.deleteMany).toHaveBeenCalled();
+            expect(PlayerInjuryReport.insertMany).toHaveBeenCalledWith(injuryReportsToDb);
+            expect(service.saveInjuryReportToPlayer).toHaveBeenCalled();
+            expect(console.log).toHaveBeenCalledTimes(1);
+            expect(console.log).toHaveBeenCalledWith('Injury reports were updated')
+        })
+        test("Logs an error when DB operation fails", async () => {
+            PlayerInjuryReport.deleteMany = jest.fn().mockImplementationOnce(() => {
                 throw new Error('anError');
             });
             await service.buildAndSaveAllPlayerStats();

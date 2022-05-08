@@ -14,7 +14,7 @@ authRouter.post('/register', async (req: Request, res: Response) => {
 		await AuthService.createUser(userData, hashedPassword, signedToken);
 		await AuthService.sendCookieAndUser(signedToken, res);
 	} catch (err: any) {
-		await ResponsesService.sendBadRequestResponse('User creation failed', err.message, res);
+		await ResponsesService.sendUnexpectedErrorResponse('User creation failed', err.message, res);
 	}
 });
 
@@ -27,7 +27,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 			await AuthService.updateTokenByEmail(userData.email, signedToken, res);
 		}
 	} catch (err: any) {
-		await ResponsesService.sendBadRequestResponse('Invalid Login', err.message, res);
+		await ResponsesService.sendUnexpectedErrorResponse('Invalid Login', err.message, res);
 	}
 });
 
@@ -71,7 +71,7 @@ authRouter.post('/forgotpassword', async (req: Request, res: Response) => {
 			throw new Error ('Could not find user matching email');
 		}
 	} catch (err: any) {
-		await ResponsesService.sendBadRequestResponse('Operation could not be fulfilled', err.message, res);
+		await ResponsesService.sendUnexpectedErrorResponse('Operation could not be fulfilled', err.message, res);
 	}
 })
 

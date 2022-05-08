@@ -1,0 +1,11 @@
+ [{
+         "displayName": "aPlayer",
+         "injury": "anInjury",
+         "status": "aStatus"
+     },
+     {
+         "displayName": "anotherPlayer",
+         "injury": "anotherInjury",
+         "status": "anotherStatus"
+     }
+ ]

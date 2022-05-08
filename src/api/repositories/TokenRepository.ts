@@ -1,5 +1,5 @@
-import { UserData } from '../../../types/auth';
-import User from '../../../../models/nba-app/user';
+import { UserData } from '../types/auth';
+import User from '../../models/nba-app/user';
 import jwt from 'jsonwebtoken';
 
 class TokenRepository {

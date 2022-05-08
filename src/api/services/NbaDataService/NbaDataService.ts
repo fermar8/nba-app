@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { ObjectId } from 'mongoose';
 import { buildOptions, buildOptionsWithHeaders } from './options/buildOptions';
-import { playerValueMapper } from '../GameDataService/utils/playerValueMapper';
-import { comparePlayerValuesAndGetNewValues } from './utils/comparePlayersAndGetNewValues';
 import { env } from '../../../../config';
 
 import {
@@ -25,9 +23,6 @@ import {
     PlayerLastFiveDbType,
     PlayerSingleGameDbType
 } from '../../types/nbaData';
-
-import { PlayerValue } from '../../../models/game-data';
-
 
 class NbaDataService {
     buildAndSaveAllTeams = async () => {
@@ -369,39 +364,6 @@ class NbaDataService {
         }
     }
 
-    updatePlayerValues = async () => {
-        try {
-            const nbaPlayers = await NbaPlayer.find();
-            const endDate = new Date('2022-04-10').toISOString().slice(0, 10)
-            const startDate = new Date('2022-04-10')
-            startDate.setDate(startDate.getDate() - 7);
-
-            const begDate = startDate.toISOString().slice(0, 10);
-
-            for (const player of nbaPlayers) {
-                const playerSingleGames = await PlayerSingleGame.find({
-                    displayName: player.displayName, gameDate: {
-                        $gte: begDate,
-                        $lte: endDate
-                    }
-                })
-                const playerValue = await PlayerValue.findOne({ displayName: player.displayName });
-                const fantasyPtsLastWeek = playerSingleGames.reduce((accumulator: any, singleGame: any) => {
-                    return accumulator + singleGame.nbaFantasyPts
-                }, 0);
-
-                const fantasyPtsPerGameLastWeek = fantasyPtsLastWeek && fantasyPtsLastWeek > 0 ? fantasyPtsLastWeek / playerSingleGames.length : 0;
-                const playerValueLastWeek = playerValueMapper(fantasyPtsPerGameLastWeek);
-                if (playerValue && playerValueLastWeek) {
-                    const newValue = comparePlayerValuesAndGetNewValues(playerValueLastWeek, playerValue.value);
-                    await PlayerValue.findOneAndUpdate({ displayName: player.displayName }, {$set: {value: newValue.value, increment: newValue.increment}} )
-                    await NbaPlayer.findByIdAndUpdate(player._id, { $set: { playerValue: playerValue._id } })
-                }
-            }
-        } catch (err: any) {
-            console.error('Error when updating player values', err);
-        }
-    }
 
     buildAndSaveInjuryReports = async () => {
         try {
@@ -419,7 +381,7 @@ class NbaDataService {
             }
             await PlayerInjuryReport.insertMany(reportsToDb);
             await this.saveInjuryReportToPlayer();
-            console.error('Injury reports were updated')
+            console.log('Injury reports were updated')
         } catch (err: any) {
             console.error('Error when updating injury reports', err);
         }

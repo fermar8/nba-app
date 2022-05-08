@@ -54,7 +54,7 @@ describe("post api/auth/register", () => {
     describe("failure cases", () => {
         test("respond with a 400 status if user registration fails", async () => {
             const response = await request(app).post('/api/auth/register').send(mockFailUser);
-            expect(response.statusCode).toBe(400);
+            expect(response.statusCode).toBe(404);
         });
     })
     afterAll(async (done) => {

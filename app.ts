@@ -5,12 +5,13 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-import cron from 'node-cron';
-import { NbaDataService } from './src/api/services';
+// import cron from 'node-cron';
+// import { NbaDataService } from './src/api/services';
 
 
 
 import { authRouter } from './src/api/routes/auth';
+import { leaguesRouter } from './src/api/routes/leagues';
 
 try {
     mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nba-app', {
@@ -33,10 +34,11 @@ app.use(cookieParser());
 
 
 app.use('/api/auth', authRouter);
+app.use('/api/leagues', leaguesRouter);
 
 //'*/2 * * * *'
 //'0 0 */8 * * *'
-cron.schedule('*/2 * * * *', async function () {
+/* cron.schedule(', async function () {
     try {
         await NbaDataService.buildAndSaveAllPlayers();
         await NbaDataService.buildAndSavePlayerSeasonStats();
@@ -49,7 +51,7 @@ cron.schedule('*/2 * * * *', async function () {
     } catch (err: any) {
         console.log('Could not update nba data', err)
     }
-})
+}) */
 
 
 export default app;
