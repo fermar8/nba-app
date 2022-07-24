@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import User from '../../models/nba-app/user';
-import { UserData } from '../types/auth';
+import { UserBasic, UserComplete, UserToFront } from '../types/auth';
 
 
 class UserRepository {
@@ -9,10 +9,12 @@ class UserRepository {
         return bcrypt.hash(password, 10);
     }
 
-    createUser = async (userData: UserData, password: string, token: string) => {
+    createUser = async (userData: UserBasic, password: string, token: string) => {
         await User.create({
             name: userData.name,
             email: userData.email,
+            teams: [],
+            leagues: [],
             password,
             token,
             createdAt: Date.now()
@@ -20,18 +22,26 @@ class UserRepository {
     }
 
     getUserData = async (name: string, email: string, password: string) => {
-        const userData: UserData = { name, email, password };
+        const userData: UserBasic = { name, email, password };
         return userData;
     }
 
     findUserByEmail = async (email: string) => {
-        const userData: UserData = await User.findOne({ email });
+        const userData: UserComplete = await User.findOne({ email });
         return userData;
     }
 
     findUserByToken = async (token: string) => {
-        const userData: UserData = await User.findOne({ token })
-        return userData;
+        const userData: UserToFront = await User.findOne({ token })
+        const reducedUserData = {
+            teams: userData.teams || [] ,
+            leagues: userData.leagues || [],
+            name: userData.name,
+            email: userData.email,
+            _id: userData._id,
+            createdAt: userData.createdAt
+        }
+        return reducedUserData;
     }
 
     updatePassword = async (email: string, newPassword: string) => {

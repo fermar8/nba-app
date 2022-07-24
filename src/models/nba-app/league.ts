@@ -14,7 +14,6 @@ const League = new mongoose.Schema(
 			type: [{ type: Schema.Types.ObjectId, ref: "UserTeam" }],
 			validate: teamValidators
 		},
-		password: { type: String },
 		isPrivate: { type: Boolean }
 	},
 	{

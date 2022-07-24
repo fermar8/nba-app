@@ -1,4 +1,4 @@
-import { UserData } from '../../../api/types/auth';
+import { UserBasic, UserData } from '../../../api/types/auth';
 import { Request, Response } from 'express';
 
 import ResponsesService from '../ResponsesService/';
@@ -17,7 +17,7 @@ class AuthService {
       return this.UserRepository.createPassword(password);
    }
 
-   createUser = async (userData: UserData, password: string, token: string) => {
+   createUser = async (userData: UserBasic, password: string, token: string) => {
       return this.UserRepository.createUser(userData, password, token);
    }
 
@@ -49,11 +49,7 @@ class AuthService {
    sendCookieAndUser = async (token: string, res: Response) => {
       await ResponsesService.buildAndSendCookie(token, res);
       const userData = await this.UserRepository.findUserByToken(token);
-      const reducedUserData = {
-         username: userData.name,
-         email: userData.email
-      }
-      await ResponsesService.sendOkPost('Cookie initialized', res, reducedUserData);
+      await ResponsesService.sendOkPost('Cookie initialized', res, userData);
    }
    
 

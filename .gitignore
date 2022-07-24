@@ -9,3 +9,4 @@ coverage/
 config.ts
 **/.DS_Store
 sendgrid.env
+dist/tsc

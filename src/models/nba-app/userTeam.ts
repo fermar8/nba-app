@@ -4,9 +4,8 @@ const Schema = mongoose.Schema;
 const UserTeam = new mongoose.Schema(
 	{
 		name: { type: String, required: true },
-        user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-		league: { type: Schema.Types.ObjectId, required: true, ref: "League" },
-        players: [{ type: Schema.Types.ObjectId, ref: "NbaPlayer" }],
+		user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        players: [{ type: Schema.Types.ObjectId, ref: "NbaPlayer", required: true }],
 	},
 	{
 		collection: 'teams',

@@ -4,9 +4,20 @@ export interface UserBasic {
 	password: string;
 }
 
-export interface UserComplete extends UserBasic {
+export interface UserToFront extends Omit<UserBasic, 'password'> {
+	teams: any;
+	leagues: any;
 	createdAt: Date;
+	_id: string;
+}
+
+export interface UserComplete extends UserBasic {
+	teams: any;
+	leagues: any;
+	createdAt: Date;
+	_id: string;
 }
 
 
-export type UserData = UserBasic | UserComplete;
+
+export type UserData = UserBasic | UserComplete | UserToFront;
