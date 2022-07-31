@@ -32,9 +32,9 @@ class UserRepository {
     }
 
     findUserByToken = async (token: string) => {
-        const userData: UserToFront = await User.findOne({ token })
+        const userData: UserToFront = await User.findOne({ token });
         const reducedUserData = {
-            teams: userData.teams || [] ,
+            teams: userData.teams || [],
             leagues: userData.leagues || [],
             name: userData.name,
             email: userData.email,

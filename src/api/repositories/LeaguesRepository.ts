@@ -5,19 +5,22 @@ import UserTeam from '../../models/nba-app/userTeam';
 
 class LeaguesRepository {
 
-    createLeague = async (userId: string, name: string, isPrivate: boolean) => {
+    createLeague = async (userId: string, name: string) => {
         const newLeague = {
             name,
             admin: userId,
-            isPrivate
         };
 
         const leagueToDb = await League.create(newLeague);
         return leagueToDb;
     }
 
-    addTeamToLeague = async (userId: string, leagueId: string, userTeam: any) => {
-        const createdTeam = await UserTeam.create(userTeam);
+    addTeamToLeague = async (userId: string, leagueId: string, name: string, players: string[]) => {
+        const createdTeam = await UserTeam.create({
+            user: userId,
+            name,
+            players
+        });
         await User.findByIdAndUpdate(userId, { $push: { leagues: leagueId, teams: createdTeam._id } });
         await League.findByIdAndUpdate(leagueId, {$push: {teams: createdTeam._id }});
         return League.findById(leagueId);

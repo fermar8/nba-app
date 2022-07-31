@@ -32,7 +32,11 @@ class TokenRepository {
 
      verifyToken = async (token: string, secret: string) => {
         const isTokenValid = jwt.verify(token, secret);
-        return isTokenValid;
+        if (isTokenValid) {
+         return true
+        } else {
+         return false
+        }
      }
 
      deleteTokenFromDb = async (token: string) => {

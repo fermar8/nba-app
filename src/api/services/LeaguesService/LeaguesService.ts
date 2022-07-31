@@ -40,34 +40,27 @@ class LeaguesService {
     } */
 
 
-    addTeamToLeague = async (headersToken: string, leagueId: string, userTeam: any) => {
+    addTeamToLeague = async (headersToken: string, leagueId: string, name: string, players: string[]) => {
         const user = await this.UserRepository.findUserByToken(headersToken);
-        console.log('user', user);
-        return this.LeaguesRepository.addTeamToLeague(user._id, leagueId, userTeam);
+        return this.LeaguesRepository.addTeamToLeague(user._id, leagueId, name, players);
     }
 
-    createLeague = async (headersToken: string, name: string, isPrivate: boolean) => {
+    createLeague = async (headersToken: string, name: string) => {
         const user = await this.UserRepository.findUserByToken(headersToken);
-        return this.LeaguesRepository.createLeague(user._id, name, isPrivate);
+        return this.LeaguesRepository.createLeague(user._id, name);
     }
 
     checkIfUserIsLeagueAdmin = async (userId: string, leagueId: string) => {
         const league = await this.getLeagueById(leagueId);
-        console.log('league', league);
-        console.log('userId', userId);
         if (league.admin.toString() === userId.toString()) {
-            console.log('heyhey');
             return true;
         } else {
-            console.log('heyheyyyyyy');
             return false;
         }
     }
 
     checkIfUserIsOwner = async (userId: string, teamId: string) => {
         const team = await this.LeaguesRepository.getTeamById(teamId);
-        console.log('teamId', teamId);
-        console.log('userId', userId);
         if (team.user.toString() === userId.toString()) {
             return true;
         } else {

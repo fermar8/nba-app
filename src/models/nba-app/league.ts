@@ -9,12 +9,11 @@ const teamValidators = [
 const League = new mongoose.Schema(
 	{
 		name: { type: String, required: true, unique: true },
-		admin: { type: Schema.Types.ObjectId, ref: "User" },
+		admin: { type: Schema.Types.ObjectId, ref: "User", required: true },
 		teams: {
 			type: [{ type: Schema.Types.ObjectId, ref: "UserTeam" }],
 			validate: teamValidators
 		},
-		isPrivate: { type: Boolean }
 	},
 	{
 		collection: 'leagues',
@@ -23,7 +22,7 @@ const League = new mongoose.Schema(
 )
 
 function arrayLimit(val: any) {
-	return val.length <= 10;
+	return val.length <= 20;
 }
 
 const model = mongoose.model('Leagues', League)

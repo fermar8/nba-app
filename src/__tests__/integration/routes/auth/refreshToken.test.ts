@@ -35,7 +35,7 @@ describe("post api/auth/refresh", () => {
         jest.mock('../../../../api/services/AuthService');
 
         jest.spyOn(authService, 'verifyToken')
-            .mockReturnValue(Promise.resolve({name: "aName", email: 'anEmail'}));
+            .mockReturnValue(Promise.resolve(true));
 
         test("respond with a 200 status if refresh token is successful", async () => {
             const user = await User.findOne({ email: 'anEmail' });
