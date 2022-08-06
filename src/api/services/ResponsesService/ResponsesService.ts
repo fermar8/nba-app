@@ -34,17 +34,23 @@ class ResponsesService {
         res.status(404).json({
             status: 'error',
             message,
-            error: error ? error: 'unexpected error',
+            error: error ? error : 'unexpected error',
         })
     }
 
-    buildAndSendCookie = async (token: string, res: Response) => {
-        res.cookie('token', token, {
+    buildCookies = async (signedTokens: { [key: string]: string; }, res: Response) => {
+        res.cookie('dbToken', signedTokens.dbToken, {
             sameSite: 'strict',
             path: '/',
             expires: new Date(new Date().setDate(new Date().getDate() + 7)),
             httpOnly: true
         })
+        res.cookie('frontToken', signedTokens.frontToken, {
+            sameSite: 'strict',
+            path: '/',
+            expires: new Date(new Date().setDate(new Date().getDate() + 7)),
+        })
+
     }
 }
 

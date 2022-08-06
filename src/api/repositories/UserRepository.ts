@@ -9,16 +9,20 @@ class UserRepository {
         return bcrypt.hash(password, 10);
     }
 
-    createUser = async (userData: UserBasic, password: string, token: string) => {
+    createUser = async (userData: UserBasic, password: string, signedTokens: { [key: string]: string; }) => {
         await User.create({
             name: userData.name,
             email: userData.email,
             teams: [],
             leagues: [],
             password,
-            token,
+            token: signedTokens.dbToken,
             createdAt: Date.now()
         })
+    }
+
+    deleteUser = async (user: any) => {
+        await User.findByIdAndDelete(user._id);
     }
 
     getUserData = async (name: string, email: string, password: string) => {

@@ -4,17 +4,23 @@ import jwt from 'jsonwebtoken';
 
 class TokenRepository {
 
-    signToken = async (userData: UserData, secret: string) => {
-        const token: string = jwt.sign({
-           name: userData.name,
-           email: userData.email
-        },
-           secret, { expiresIn: '7d' }
-        )
-        return token;
-     }
+   signTokens = async (userData: UserData, secret: string) => {
+      const randomSecret = Math.random().toString(36).replace(/[^a-z]+/g, '').substring(0, 5);
 
-     sliceToken = async (cookie: string) => {
+      const dbToken: string = jwt.sign({
+         name: userData.name,
+         email: userData.email
+      },
+         secret, { expiresIn: '7d' }
+      )
+      const frontToken: string = jwt.sign({},
+         randomSecret, { expiresIn: '7d' }
+      )
+
+      return { dbToken, frontToken };
+   }
+
+   sliceToken = async (cookie: string) => {
       const slicedCookie = cookie.slice(6);
       if (!slicedCookie) {
          throw new Error('No token received')
@@ -22,28 +28,28 @@ class TokenRepository {
       return slicedCookie
    }
 
-     updateTokenByEmail = async (email: string, token: string) => {
-        await User.findOneAndUpdate({ email }, { token });
-     }
+   updateTokenByEmail = async (email: string, signedTokens: { [key: string]: string; }) => {
+      await User.findOneAndUpdate({ email }, { token: signedTokens.dbToken });
+   }
 
-     updateTokenByToken = async (token: string, refreshToken: string) => {
-        await User.findOneAndUpdate({ token }, { token: refreshToken });
-     }
+   updateTokenByToken = async (token: string, refreshTokens: { [key: string]: string; }) => {
+      await User.findOneAndUpdate({ token }, { token: refreshTokens.dbToken });
+   }
 
-     verifyToken = async (token: string, secret: string) => {
-        const isTokenValid = jwt.verify(token, secret);
-        if (isTokenValid) {
+   verifyToken = async (token: string, secret: string) => {
+      const isTokenValid = jwt.verify(token, secret);
+      if (isTokenValid) {
          return true
-        } else {
+      } else {
          return false
-        }
-     }
+      }
+   }
 
-     deleteTokenFromDb = async (token: string) => {
-         await User.findOneAndUpdate({ token }, {$unset: { token }})
-     }
+   deleteTokenFromDb = async (token: string) => {
+      await User.findOneAndUpdate({ token }, { $unset: { token } })
+   }
 
-     
+
 
 }
 

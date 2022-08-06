@@ -7,7 +7,7 @@ const databaseName = 'refreshToken-test';
 const url = `mongodb://localhost:27017/${databaseName}`;
 
 
-describe("post api/auth/refresh", () => {
+describe("post api/auth/me", () => {
     const mockUser = {
         name: 'aUser',
         email: 'anEmail',
@@ -39,13 +39,13 @@ describe("post api/auth/refresh", () => {
 
         test("respond with a 200 status if refresh token is successful", async () => {
             const user = await User.findOne({ email: 'anEmail' });
-            const response = await request(app).put('/api/auth/refresh').set('Cookie', `token=${user.token}`);
+            const response = await request(app).put('/api/auth/me').set('Cookie', `token=${user.token}`);
             expect(response.statusCode).toBe(200);
             expect(user.token).toBeTruthy();
         });
         test("save refreshed token to database", async () => {
             const user = await User.findOne({ email: 'anEmail' });
-            await request(app).put('/api/auth/refresh').set('Cookie', `token=${user.token}`);
+            await request(app).put('/api/auth/me').set('Cookie', `token=${user.token}`);
             const userAfterRefresh = await User.findOne({ email: 'anEmail' });
             expect(userAfterRefresh.toJSON()).toEqual(expect.objectContaining({
                 _id: expect.anything(),
@@ -59,13 +59,14 @@ describe("post api/auth/refresh", () => {
         })
         test("send refreshed token as cookie in response headers", async () => {
             const user = await User.findOne({ email: 'anEmail' });
-            const response = await request(app).put('/api/auth/refresh').set('Cookie', `token=${user.token}`);
+            const response = await request(app).put('/api/auth/me').set('Cookie', `token=${user.token}`);
+            console.log('response', response.header)
             expect(response.header).toHaveProperty('set-cookie');
         });
     })
     describe("failure cases", () => {
         test("should respond with a 404 status if refresh fails", async () => {
-            const response = await request(app).put('/api/auth/refresh').set('token', 'anInvalidToken');
+            const response = await request(app).put('/api/auth/me').set('token', 'anInvalidToken');
             expect(response.statusCode).toBe(404);
         });
     })

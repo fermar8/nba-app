@@ -32,6 +32,10 @@ class LeaguesRepository {
         await User.findByIdAndUpdate(user._id, {$pull: {teams: teamId}});
     }
 
+    deleteTeam = async (teamId: string) => {
+        await UserTeam.findByIdAndDelete(teamId);
+    }
+
     getLeagues = async() => {
         return await League.find();
     }
