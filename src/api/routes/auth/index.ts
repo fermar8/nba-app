@@ -53,10 +53,10 @@ authRouter.put('/me', async (req: Request, res: Response) => {
 
 authRouter.put('/logout', async (req: Request, res: Response) => {
 	try {
-		const headersToken: string = await AuthService.sliceToken(req);
-		const isTokenValid = await AuthService.verifyToken(headersToken, env.JWT_SECRET as string);
+		const dbCookie: string = await AuthService.getCookieByName(req.headers.cookie, 'dbToken');
+		const isTokenValid = await AuthService.verifyToken(dbCookie, env.JWT_SECRET as string);
 		if (isTokenValid) {
-			await AuthService.TokenRepository.deleteTokenFromDb(headersToken);
+			await AuthService.TokenRepository.deleteTokenFromDb(dbCookie);
 			await ResponsesService.sendOkNoContent('Token deleted and logged out successfully', res);
 		} else {
             await ResponsesService.sendBadRequestResponse('User token is not valid', res);
