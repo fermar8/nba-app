@@ -1,12 +1,13 @@
 import { UserData } from '../types/auth';
 import User from '../../models/nba-app/user';
 import jwt from 'jsonwebtoken';
+import { env } from '../../../config';
 
 class TokenRepository {
 
    signTokens = async (userData: UserData, secret: string) => {
-      const randomSecret = Math.random().toString(36).replace(/[^a-z]+/g, '').substring(0, 5);
 
+      const frontSecret = env.JWT_FRONT_SECRET as string
       const dbToken: string = jwt.sign({
          name: userData.name,
          email: userData.email
@@ -14,7 +15,7 @@ class TokenRepository {
          secret, { expiresIn: '7d' }
       )
       const frontToken: string = jwt.sign({},
-         randomSecret, { expiresIn: '7d' }
+         frontSecret, { expiresIn: '7d' }
       )
 
       return { dbToken, frontToken };
