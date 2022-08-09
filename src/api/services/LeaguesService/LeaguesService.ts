@@ -1,29 +1,4 @@
-/* import axios from 'axios';
-import { ObjectId } from 'mongoose';
-import { env } from '../../../../config';
-
-import {
-    NbaTeam,
-    NbaPlayer,
-    PlayerInjuryReport,
-    PlayerStats,
-    PlayerStatsPerGame,
-    PlayerStatsLast5,
-    PlayerSingleGame
-} from '../../../models/nba-data';
-
-import {
-    NbaPlayerType,
-    NbaTeamType,
-    PlayerPerGameStatsNewType,
-    PlayerLastFiveNewType,
-    PlayerSingleGameNewType,
-    PlayerPerGameStatsDbType,
-    PlayerLastFiveDbType,
-    PlayerSingleGameDbType
-} from '../../types/nbaData'; */
 import { tokenRepository, userRepository, leaguesRepository } from '../../repositories';
-// import { Request } from 'express';
 
 class LeaguesService {
     UserRepository: typeof userRepository;
@@ -34,11 +9,6 @@ class LeaguesService {
             this.TokenRepository = TokenRepository,
             this.LeaguesRepository = LeaguesRepository
     }
-    /* createTeam = async (headersToken: string, req: Request) => {
-        const user = this.UserRepository.findUserByToken(headersToken);
-        return user;
-    } */
-
 
     addTeamToLeague = async (headersToken: string, leagueId: string, name: string, players: string[]) => {
         const user = await this.UserRepository.findUserByToken(headersToken);
@@ -78,6 +48,10 @@ class LeaguesService {
 
     getLeagueById = async (leagueId: string) => {
         return this.LeaguesRepository.getLeagueById(leagueId);
+    }
+
+    getTeamsByUser = async (userId: string) => {
+        return await this.LeaguesRepository.getTeamsByUser(userId);        
     }
 }
 

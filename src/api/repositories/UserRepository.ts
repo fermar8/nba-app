@@ -14,7 +14,6 @@ class UserRepository {
             name: userData.name,
             email: userData.email,
             teams: [],
-            leagues: [],
             password,
             token: signedTokens.dbToken,
             createdAt: Date.now()
@@ -31,21 +30,29 @@ class UserRepository {
     }
 
     findUserByEmail = async (email: string) => {
-        const userData: UserComplete = await User.findOne({ email });
-        return userData;
+        const userData: UserComplete | null = await User.findOne({ email });
+        if (userData) {
+            return userData;
+        } else {
+            throw new Error('Could not find user in DB');
+        }
     }
 
     findUserByToken = async (token: string) => {
-        const userData: UserToFront = await User.findOne({ token });
-        const reducedUserData = {
-            teams: userData.teams || [],
-            leagues: userData.leagues || [],
-            name: userData.name,
-            email: userData.email,
-            _id: userData._id,
-            createdAt: userData.createdAt
+        const userData: UserToFront | null = await User.findOne({ token });
+        if (userData) {
+            const reducedUserData = {
+                teams: userData.teams || [],
+                leagues: userData.leagues || [],
+                name: userData.name,
+                email: userData.email,
+                _id: userData._id,
+                createdAt: userData.createdAt
+            }
+            return reducedUserData;
+        } else {
+            throw new Error('Could not find user in DB');
         }
-        return reducedUserData;
     }
 
     updatePassword = async (email: string, newPassword: string) => {

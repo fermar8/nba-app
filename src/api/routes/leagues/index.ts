@@ -1,14 +1,13 @@
 import { env } from '../../../../config';
 import { Router, Request, Response } from 'express';
 import { AuthService, LeaguesService, ResponsesService } from '../../services';
-// import { UserData } from '../../types/auth';
 
 export const leaguesRouter = Router();
 
 leaguesRouter.get('/', async (req: Request, res: Response) => {
 	try {
-		const headersToken: string = await AuthService.sliceToken(req);
-		const isTokenValid = await AuthService.verifyToken(headersToken, env.JWT_SECRET as string);
+		const dbCookie: string = await AuthService.getCookieByName(req.headers.cookie, 'dbToken');
+		const isTokenValid = await AuthService.verifyToken(dbCookie, env.JWT_SECRET as string);
 
         if (isTokenValid) {
             const allLeagues = await LeaguesService.getLeagues();
@@ -21,10 +20,45 @@ leaguesRouter.get('/', async (req: Request, res: Response) => {
 	}
 });
 
+leaguesRouter.get('/:userId', async (req: Request, res: Response) => {
+	try {
+		const dbCookie: string = await AuthService.getCookieByName(req.headers.cookie, 'dbToken');
+		const isTokenValid = await AuthService.verifyToken(dbCookie, env.JWT_SECRET as string);
+
+        const { userId } = req.params;
+
+        if (isTokenValid) {
+            const userLeagues = await LeaguesService.getTeamsByUser(userId);
+            await ResponsesService.sendOkPost('User leagues retrieved successfully', res, userLeagues);
+        } else {
+            await ResponsesService.sendBadRequestResponse('User token is not valid', res);
+        }
+	} catch (err: any) {
+		await ResponsesService.sendUnexpectedErrorResponse('Error while retrieving league', err.message, res);
+	}
+});
+
+leaguesRouter.post('/', async (req: Request, res: Response) => {
+	try {
+		const dbCookie: string = await AuthService.getCookieByName(req.headers.cookie, 'dbToken');
+		const isTokenValid = await AuthService.verifyToken(dbCookie, env.JWT_SECRET as string);
+
+        if (isTokenValid) {
+            const { name } = req.body;
+            const createdTeam = await LeaguesService.createLeague(dbCookie, name);
+            await ResponsesService.sendOkPost('League created successfully', res, createdTeam);
+        } else {
+            await ResponsesService.sendBadRequestResponse('User token is not valid', res);
+        }
+	} catch (err: any) {
+		await ResponsesService.sendUnexpectedErrorResponse('League creation failed', err.message, res);
+	}
+});
+
 leaguesRouter.get('/:id', async (req: Request, res: Response) => {
 	try {
-		const headersToken: string = await AuthService.sliceToken(req);
-		const isTokenValid = await AuthService.verifyToken(headersToken, env.JWT_SECRET as string);
+		const dbCookie: string = await AuthService.getCookieByName(req.headers.cookie, 'dbToken');
+		const isTokenValid = await AuthService.verifyToken(dbCookie, env.JWT_SECRET as string);
 
         const { id } = req.params;
 
@@ -38,32 +72,17 @@ leaguesRouter.get('/:id', async (req: Request, res: Response) => {
 		await ResponsesService.sendUnexpectedErrorResponse('Error while retrieving league', err.message, res);
 	}
 });
-leaguesRouter.post('/', async (req: Request, res: Response) => {
-	try {
-		const headersToken: string = await AuthService.sliceToken(req);
-		const isTokenValid = await AuthService.verifyToken(headersToken, env.JWT_SECRET as string);
 
-        if (isTokenValid) {
-            const { name } = req.body;
-            const createdTeam = await LeaguesService.createLeague(headersToken, name);
-            await ResponsesService.sendOkPost('League created successfully', res, createdTeam);
-        } else {
-            await ResponsesService.sendBadRequestResponse('User token is not valid', res);
-        }
-	} catch (err: any) {
-		await ResponsesService.sendUnexpectedErrorResponse('League creation failed', err.message, res);
-	}
-});
 
 leaguesRouter.post('/team/:id', async (req: Request, res: Response) => {
 	try {
-		const headersToken: string = await AuthService.sliceToken(req);
-		const isTokenValid = await AuthService.verifyToken(headersToken, env.JWT_SECRET as string);
+		const dbCookie: string = await AuthService.getCookieByName(req.headers.cookie, 'dbToken');
+		const isTokenValid = await AuthService.verifyToken(dbCookie, env.JWT_SECRET as string);
         const { id } = req.params;
         const { name, players } = req.body;
 
         if (isTokenValid) {
-            const league = await LeaguesService.addTeamToLeague(headersToken, id, name, players);
+            const league = await LeaguesService.addTeamToLeague(dbCookie, id, name, players);
             await ResponsesService.sendOkPost('User joined the league', res, league);
         } else {
             await ResponsesService.sendBadRequestResponse('User token is not valid', res);
@@ -76,9 +95,9 @@ leaguesRouter.post('/team/:id', async (req: Request, res: Response) => {
 
 leaguesRouter.delete('/team/:leagueId/:teamId', async (req: Request, res: Response) => {
 	try {
-		const headersToken: string = await AuthService.sliceToken(req);
-		const isTokenValid = await AuthService.verifyToken(headersToken, env.JWT_SECRET as string);
-        const user = await AuthService.findUserByToken(headersToken);
+		const dbCookie: string = await AuthService.getCookieByName(req.headers.cookie, 'dbToken');
+		const isTokenValid = await AuthService.verifyToken(dbCookie, env.JWT_SECRET as string);
+        const user = await AuthService.findUserByToken(dbCookie);
         const { leagueId } = req.params;
         const { teamId } = req.params;
         const isAdmin = await LeaguesService.checkIfUserIsLeagueAdmin(user._id, leagueId);

@@ -19,29 +19,35 @@ class LeaguesRepository {
         const createdTeam = await UserTeam.create({
             user: userId,
             name,
-            players
+            players,
+            league: leagueId
         });
-        await User.findByIdAndUpdate(userId, { $push: { leagues: leagueId, teams: createdTeam._id } });
-        await League.findByIdAndUpdate(leagueId, {$push: {teams: createdTeam._id }});
+        await User.findByIdAndUpdate(userId, { $push: { teams: createdTeam._id } });
+        await League.findByIdAndUpdate(leagueId, { $push: { teams: createdTeam._id } });
         return League.findById(leagueId);
     }
 
     deleteTeamFromLeague = async (user: any, leagueId: string, teamId: string) => {
         await UserTeam.findByIdAndDelete(teamId);
-        await League.findByIdAndUpdate(leagueId, {$pull: {teams: teamId}});
-        await User.findByIdAndUpdate(user._id, {$pull: {teams: teamId}});
+        await League.findByIdAndUpdate(leagueId, { $pull: { teams: teamId } });
+        await User.findByIdAndUpdate(user._id, { $pull: { teams: teamId } });
     }
 
     deleteTeam = async (teamId: string) => {
         await UserTeam.findByIdAndDelete(teamId);
     }
 
-    getLeagues = async() => {
+    getLeagues = async () => {
         return await League.find();
     }
 
     getLeagueById = async (leagueId: string) => {
         return await League.findById(leagueId);
+    }
+
+    getTeamsByUser = async (userId: string) => {
+        return await UserTeam.find({ 'user': userId })
+            .populate({ path: 'league', model: League });
     }
 
     getTeamById = async (teamId: string) => {

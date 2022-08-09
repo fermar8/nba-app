@@ -68,10 +68,10 @@ authRouter.put('/logout', async (req: Request, res: Response) => {
 
 authRouter.delete('/delete', async (req: Request, res: Response) => {
 	try {
-		const headersToken: string = await AuthService.sliceToken(req);
-		const isTokenValid = await AuthService.verifyToken(headersToken, env.JWT_SECRET as string);
+		const dbCookie: string = await AuthService.getCookieByName(req.headers.cookie, 'dbToken');
+		const isTokenValid = await AuthService.verifyToken(dbCookie, env.JWT_SECRET as string);
 		if (isTokenValid) {
-			await AuthService.deleteUser(headersToken);
+			await AuthService.deleteUser(dbCookie);
 			await ResponsesService.sendOkNoContent('User deleted from DB', res);
 		} else {
             await ResponsesService.sendBadRequestResponse('User token is not valid', res);

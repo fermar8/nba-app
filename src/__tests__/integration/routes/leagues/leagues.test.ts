@@ -44,13 +44,13 @@ describe("api/leagues", () => {
         test("respond with a 200 status if leagues are retrieved successfully", async () => {
             jest.spyOn(authService, 'verifyToken')
                 .mockReturnValueOnce(Promise.resolve(true));
-            const response = await request(app).get('/api/leagues').set('Cookie', `token=123456`);
+            const response = await request(app).get('/api/leagues').set('Cookie', `dbToken=123456`);
             expect(response.statusCode).toBe(200);
         });
         test("respond with 400 if token is invalid", async () => {
             jest.spyOn(authService, 'verifyToken')
                 .mockReturnValueOnce(Promise.resolve(false));
-            const response = await request(app).get('/api/leagues').set('Cookie', `token=123456`);
+            const response = await request(app).get('/api/leagues').set('Cookie', `dbToken=123456`);
             expect(response.statusCode).toBe(400);
         });
         test("respond with 404 if there is an unexpected error", async () => {
@@ -58,7 +58,7 @@ describe("api/leagues", () => {
                 .mockImplementation(() => {
                     throw new Error();
                 });
-            const response = await request(app).get('/api/leagues').set('Cookie', `token=123456`);
+            const response = await request(app).get('/api/leagues').set('Cookie', `dbToken=123456`);
             expect(response.statusCode).toBe(404);
         });
     })
@@ -67,7 +67,7 @@ describe("api/leagues", () => {
             jest.spyOn(authService, 'verifyToken')
                 .mockReturnValueOnce(Promise.resolve(true));
             const leaguesFromDb = await League.find();
-            const response = await request(app).get(`/api/leagues/${leaguesFromDb[0]._id}`).set('Cookie', `token=123456`);
+            const response = await request(app).get(`/api/leagues/${leaguesFromDb[0]._id}`).set('Cookie', `dbToken=123456`);
             expect(response.statusCode).toBe(200);
         });
     })
@@ -75,9 +75,9 @@ describe("api/leagues", () => {
         test("respond with a 200 status if league is created successfully", async () => {
             jest.spyOn(authService, 'verifyToken')
                 .mockReturnValueOnce(Promise.resolve(true));
-            const userFromDb = await User.findOne({ name: 'aUser' })
+            const userFromDb = await User.findOne({ name: 'aUser' });
             const response = await request(app).post('/api/leagues')
-                .set('Cookie', `token=${userFromDb.token}`)
+                .set('Cookie', `dbToken=${userFromDb.token};`)
                 .send({ name: 'aLeague' })
             expect(response.statusCode).toBe(200);
         });
@@ -89,7 +89,7 @@ describe("api/leagues", () => {
             const userFromDb = await User.findOne({ name: 'aUser' });
             const leagueFromDb = await League.findOne({ name: 'aLeague' });
             const response = await request(app).post(`/api/leagues/team/${leagueFromDb._id}`)
-                .set('Cookie', `token=${userFromDb.token}`)
+                .set('Cookie', `dbToken=${userFromDb.token};`)
                 .send({
                     name: 'aTeam',
                 })
@@ -97,32 +97,38 @@ describe("api/leagues", () => {
         });
     })
     describe("delete api/leagues/team/:leagueId/:teamId", async () => {
-        const userFromDb = await User.findOne({ name: 'aUser' });
-        const leagueFromDb = await League.findOne({ name: 'aLeague' });
-        const teamFromDb = await UserTeam.findOne({ name: 'aTeam' });
         test("respond with a 204 status if team is deleted from league by admin", async () => {
+            const userFromDb = await User.findOne({ name: 'aUser' });
+            const leagueFromDb = await League.findOne({ name: 'aLeague' });
+            const teamFromDb = await UserTeam.findOne({ name: 'aTeam' });
             jest.spyOn(authService, 'verifyToken')
                 .mockReturnValueOnce(Promise.resolve(true));
             jest.spyOn(leaguesService, 'checkIfUserIsLeagueAdmin')
                 .mockReturnValueOnce(Promise.resolve(true));
             const response = await request(app).delete(`/api/leagues/team/${leagueFromDb._id}/${teamFromDb._id}`)
-                .set('Cookie', `token=${userFromDb.token}`)
+                .set('Cookie', `dbToken=${userFromDb.token};`)
             expect(response.statusCode).toBe(204);
         });
         test("respond with a 204 status if team is deleted from league by team owner", async () => {
+            const userFromDb = await User.findOne({ name: 'aUser' });
+            const leagueFromDb = await League.findOne({ name: 'aLeague' });
+            const teamFromDb = await UserTeam.findOne({ name: 'aTeam' });
             jest.spyOn(authService, 'verifyToken')
                 .mockReturnValueOnce(Promise.resolve(true));
             jest.spyOn(leaguesService, 'checkIfUserIsOwner')
                 .mockReturnValueOnce(Promise.resolve(true));
             const response = await request(app).delete(`/api/leagues/team/${leagueFromDb._id}/${teamFromDb._id}`)
-                .set('Cookie', `token=${userFromDb.token}`)
+                .set('Cookie', `dbToken=${userFromDb.token};`)
             expect(response.statusCode).toBe(204);
         });
         test("respond with a 400 status if user deleting isn't owner or admin of league", async () => {
+            const userFromDb = await User.findOne({ name: 'aUser' });
+            const leagueFromDb = await League.findOne({ name: 'aLeague' });
+            const teamFromDb = await UserTeam.findOne({ name: 'aTeam' });
             jest.spyOn(authService, 'verifyToken')
                 .mockReturnValueOnce(Promise.resolve(true));
             const response = await request(app).delete(`/api/leagues/team/${leagueFromDb._id}/${teamFromDb._id}`)
-                .set('Cookie', `token=${userFromDb.token}`)
+                .set('Cookie', `dbToken=${userFromDb.token};`)
             expect(response.statusCode).toBe(400);
         });
     })
